@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_mx_japs_portal_configuracion_modelo_Servicio" modelAttribute="servicio" path="/servicios" versionField="Version" z="LkKhHzKoGifpklWvoOr2xupeD4I=">
+        <field:input field="nombre" id="c_mx_japs_portal_configuracion_modelo_Servicio_nombre" z="YiWRHmbqWyN7s/7bhcPLUnF7SdE="/>
+        <field:input field="descripcion" id="c_mx_japs_portal_configuracion_modelo_Servicio_descripcion" z="yCtmE4zEjCub74DaX5C96zN7OOI="/>
+        <field:input field="url" id="c_mx_japs_portal_configuracion_modelo_Servicio_url" z="Nubz9NTUWtSkEKC/iwN3AhZANGs="/>
+        <field:simple field="operaciones" id="c_mx_japs_portal_configuracion_modelo_Servicio_operaciones" messageCode="entity_reference_not_managed" messageCodeAttribute="Servicio Operacion" z="Sg34o0rBjpGv0wODLELeMWUe73M="/>
+        <field:select field="portal" id="c_mx_japs_portal_configuracion_modelo_Servicio_portal" itemValue="id" items="${portals}" path="/portals" z="VogWLhUe1FY/H/v78vPBMok0VE0="/>
+    </form:update>
+</div>

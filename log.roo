@@ -1,0 +1,67 @@
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-09-18 15:25:52
+project --topLevelPackage mx.japs.portal.configuracion --projectName configuracion --java 7 --packaging WAR
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table PORTAL --class ~.modelo.Portal
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table PARAMETRO --class ~.modelo.Parametro
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table MODULO --class ~.modelo.Modulo
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table MENU_OPCION --class ~.modelo.MenuOpcion
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table SERVICIO --class ~.modelo.Servicio
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table SERVICIO_OPERACION --class ~.modelo.ServicioOperacion
+field string --fieldName nombre --class ~.modelo.Portal
+field string --fieldName descripcion --class ~.modelo.Portal
+field string --fieldName url --class ~.modelo.Portal
+field string --fieldName api_url --class ~.modelo.Portal
+constructor --class ~.modelo.Portal --fields "nombre descripcion"
+constructor --class ~.modelo.Portal --fields "nombre descripcion url"
+constructor --class ~.modelo.Portal --fields "nombre descripcion url api_url"
+field string --fieldName grupo --class ~.modelo.Parametro
+field string --fieldName nombre --class ~.modelo.Parametro
+field string --fieldName valor --class ~.modelo.Parametro
+field string --fieldName descripcion --class ~.modelo.Parametro
+constructor --class ~.modelo.Parametro --fields "grupo nombre valor descripcion"
+field string --fieldName nombre --class ~.modelo.Modulo
+field string --fieldName descripcion --class ~.modelo.Modulo
+field string --fieldName url --class ~.modelo.Modulo
+constructor --class ~.modelo.Modulo --fields "nombre descripcion"
+constructor --class ~.modelo.Modulo --fields "nombre descripcion url"
+field string --fieldName nombre --class ~.modelo.MenuOpcion
+field string --fieldName texto --class ~.modelo.MenuOpcion
+field string --fieldName url --class ~.modelo.MenuOpcion
+constructor --class ~.modelo.MenuOpcion --fields "nombre texto url"
+field string --fieldName nombre --class ~.modelo.Servicio
+field string --fieldName descripcion --class ~.modelo.Servicio
+field string --fieldName url --class ~.modelo.Servicio
+constructor --class ~.modelo.Servicio --fields "nombre descripcion"
+constructor --class ~.modelo.Servicio --fields "nombre descripcion url"
+field string --fieldName nombre --class ~.modelo.ServicioOperacion
+field string --fieldName descripcion --class ~.modelo.ServicioOperacion
+field string --fieldName url --class ~.modelo.ServicioOperacion
+constructor --class ~.modelo.ServicioOperacion --fields "nombre descripcion"
+constructor --class ~.modelo.ServicioOperacion --fields "nombre descripcion url"
+field set --fieldName parametros --type ~.modelo.Parametro    --cardinality ONE_TO_MANY --mappedBy portal --class ~.modelo.Portal
+field set --fieldName modulos --type ~.modelo.Modulo     --cardinality ONE_TO_MANY --mappedBy portal --class ~.modelo.Portal
+field set --fieldName servicios --type ~.modelo.Servicio    --cardinality ONE_TO_MANY --mappedBy portal --class ~.modelo.Portal
+field set --fieldName operaciones --type ~.modelo.ServicioOperacion --cardinality ONE_TO_MANY --mappedBy servicio --class ~.modelo.Servicio
+field set --fieldName opciones --type ~.modelo.MenuOpcion    --cardinality ONE_TO_MANY --mappedBy modulo   --class ~.modelo.Modulo
+field set --fieldName opciones --type ~.modelo.MenuOpcion    --cardinality ONE_TO_MANY --mappedBy opcionPadre --class ~.modelo.MenuOpcion
+field reference --fieldName portal --type ~.modelo.Portal  --cardinality MANY_TO_ONE --class ~.modelo.Parametro
+field reference --fieldName portal --type ~.modelo.Portal  --cardinality MANY_TO_ONE --class ~.modelo.Modulo
+field reference --fieldName portal --type ~.modelo.Portal  --cardinality MANY_TO_ONE --class ~.modelo.Servicio
+field reference --fieldName modulo --type ~.modelo.Modulo --cardinality MANY_TO_ONE --class ~.modelo.MenuOpcion
+field reference --fieldName opcionPadre --type ~.modelo.MenuOpcion --cardinality MANY_TO_ONE --class ~.modelo.MenuOpcion
+field reference --fieldName servicio --type ~.modelo.Servicio --cardinality MANY_TO_ONE --class ~.modelo.ServicioOperacion
+repository jpa --interface ~.repositorio.PortalRepository --entity ~.modelo.Portal
+repository jpa --interface ~.repositorio.ParametroRepository --entity ~.modelo.Parametro
+repository jpa --interface ~.repositorio.ModuloRepository --entity ~.modelo.Modulo
+repository jpa --interface ~.repositorio.MenuOpcionRepository --entity ~.modelo.MenuOpcion
+repository jpa --interface ~.repositorio.ServicioRepository --entity ~.modelo.Servicio
+repository jpa --interface ~.repositorio.ServicioOperacionRepository --entity ~.modelo.ServicioOperacion
+service all --interfacePackage ~.servicio --useXmlConfiguration false 
+json all
+web mvc setup
+web mvc all --package ~.controlador
+web mvc json all
+logging setup --level INFO
+// script d:\japerez\javier\respaldo_roo_rest\Configuracion_20150907.roo
+quit
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log closed at 2015-09-18 15:26:57

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_mx_japs_portal_configuracion_modelo_Parametro" object="${parametro}" path="/parametroes" z="zneZhGxsZzAlg0OoBqmcyrqOHtA=">
+        <field:display field="grupo" id="s_mx_japs_portal_configuracion_modelo_Parametro_grupo" object="${parametro}" z="MvnlAUttTIVtDAsqP1GLiEhYIzQ="/>
+        <field:display field="nombre" id="s_mx_japs_portal_configuracion_modelo_Parametro_nombre" object="${parametro}" z="HCX7qYZEZHDmjJluCRFgnq4kgOc="/>
+        <field:display field="valor" id="s_mx_japs_portal_configuracion_modelo_Parametro_valor" object="${parametro}" z="vz8KLPytmPAWw8iThYO9lPNjh+A="/>
+        <field:display field="descripcion" id="s_mx_japs_portal_configuracion_modelo_Parametro_descripcion" object="${parametro}" z="c7Kxs6rTkO5+1lgzMrEWAUbLlUs="/>
+        <field:display field="portal" id="s_mx_japs_portal_configuracion_modelo_Parametro_portal" object="${parametro}" z="fH2MOM5E9Ritb0j9bK5Ec+izCqk="/>
+    </page:show>
+</div>

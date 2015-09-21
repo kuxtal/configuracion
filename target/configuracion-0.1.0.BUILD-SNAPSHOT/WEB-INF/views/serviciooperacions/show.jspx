@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_mx_japs_portal_configuracion_modelo_ServicioOperacion" object="${serviciooperacion}" path="/serviciooperacions" z="Y4jvXP0o0IVK/WGeJyb8lqIDaUY=">
+        <field:display field="nombre" id="s_mx_japs_portal_configuracion_modelo_ServicioOperacion_nombre" object="${serviciooperacion}" z="cIPymojjWaDfg/iSVZGZp/XPQBM="/>
+        <field:display field="descripcion" id="s_mx_japs_portal_configuracion_modelo_ServicioOperacion_descripcion" object="${serviciooperacion}" z="5DVAo4Tamd3cxAFCaZmoi/gTL5o="/>
+        <field:display field="url" id="s_mx_japs_portal_configuracion_modelo_ServicioOperacion_url" object="${serviciooperacion}" z="T9B8jGCOiVy80BlgPwwd2FZ+TQg="/>
+        <field:display field="servicio" id="s_mx_japs_portal_configuracion_modelo_ServicioOperacion_servicio" object="${serviciooperacion}" z="lUAPdJTIJ+8qBf4r5HgRu9ArJZY="/>
+    </page:show>
+</div>
