@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.PortalController;
 import mx.japs.portal.configuracion.modelo.Portal;
-import mx.japs.portal.configuracion.servicio.ModuloService;
-import mx.japs.portal.configuracion.servicio.ParametroService;
-import mx.japs.portal.configuracion.servicio.PortalService;
-import mx.japs.portal.configuracion.servicio.ServicioService;
+import mx.japs.portal.configuracion.repositorio.ModuloRepository;
+import mx.japs.portal.configuracion.repositorio.ParametroRepository;
+import mx.japs.portal.configuracion.repositorio.PortalRepository;
+import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,16 +25,16 @@ import org.springframework.web.util.WebUtils;
 privileged aspect PortalController_Roo_Controller {
     
     @Autowired
-    PortalService PortalController.portalService;
+    PortalRepository PortalController.portalRepository;
     
     @Autowired
-    ModuloService PortalController.moduloService;
+    ModuloRepository PortalController.moduloRepository;
     
     @Autowired
-    ParametroService PortalController.parametroService;
+    ParametroRepository PortalController.parametroRepository;
     
     @Autowired
-    ServicioService PortalController.servicioService;
+    ServicioRepository PortalController.servicioRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String PortalController.create(@Valid Portal portal, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -43,7 +43,7 @@ privileged aspect PortalController_Roo_Controller {
             return "portals/create";
         }
         uiModel.asMap().clear();
-        portalService.savePortal(portal);
+        portalRepository.save(portal);
         return "redirect:/portals/" + encodeUrlPathSegment(portal.getId().toString(), httpServletRequest);
     }
     
@@ -55,7 +55,7 @@ privileged aspect PortalController_Roo_Controller {
     
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String PortalController.show(@PathVariable("id") Long id, Model uiModel) {
-        uiModel.addAttribute("portal", portalService.findPortal(id));
+        uiModel.addAttribute("portal", portalRepository.findOne(id));
         uiModel.addAttribute("itemId", id);
         return "portals/show";
     }
@@ -65,11 +65,11 @@ privileged aspect PortalController_Roo_Controller {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("portals", portalService.findPortalEntries(firstResult, sizeNo));
-            float nrOfPages = (float) portalService.countAllPortals() / sizeNo;
+            uiModel.addAttribute("portals", portalRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / sizeNo, sizeNo)).getContent());
+            float nrOfPages = (float) portalRepository.count() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("portals", portalService.findAllPortals());
+            uiModel.addAttribute("portals", portalRepository.findAll());
         }
         return "portals/list";
     }
@@ -81,20 +81,20 @@ privileged aspect PortalController_Roo_Controller {
             return "portals/update";
         }
         uiModel.asMap().clear();
-        portalService.updatePortal(portal);
+        portalRepository.save(portal);
         return "redirect:/portals/" + encodeUrlPathSegment(portal.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String PortalController.updateForm(@PathVariable("id") Long id, Model uiModel) {
-        populateEditForm(uiModel, portalService.findPortal(id));
+        populateEditForm(uiModel, portalRepository.findOne(id));
         return "portals/update";
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String PortalController.delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Portal portal = portalService.findPortal(id);
-        portalService.deletePortal(portal);
+        Portal portal = portalRepository.findOne(id);
+        portalRepository.delete(portal);
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
@@ -103,9 +103,9 @@ privileged aspect PortalController_Roo_Controller {
     
     void PortalController.populateEditForm(Model uiModel, Portal portal) {
         uiModel.addAttribute("portal", portal);
-        uiModel.addAttribute("moduloes", moduloService.findAllModuloes());
-        uiModel.addAttribute("parametroes", parametroService.findAllParametroes());
-        uiModel.addAttribute("servicios", servicioService.findAllServicios());
+        uiModel.addAttribute("moduloes", moduloRepository.findAll());
+        uiModel.addAttribute("parametroes", parametroRepository.findAll());
+        uiModel.addAttribute("servicios", servicioRepository.findAll());
     }
     
     String PortalController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

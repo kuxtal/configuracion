@@ -10,12 +10,12 @@ import mx.japs.portal.configuracion.modelo.Parametro;
 import mx.japs.portal.configuracion.modelo.Portal;
 import mx.japs.portal.configuracion.modelo.Servicio;
 import mx.japs.portal.configuracion.modelo.ServicioOperacion;
-import mx.japs.portal.configuracion.servicio.MenuOpcionService;
-import mx.japs.portal.configuracion.servicio.ModuloService;
-import mx.japs.portal.configuracion.servicio.ParametroService;
-import mx.japs.portal.configuracion.servicio.PortalService;
-import mx.japs.portal.configuracion.servicio.ServicioOperacionService;
-import mx.japs.portal.configuracion.servicio.ServicioService;
+import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
+import mx.japs.portal.configuracion.repositorio.ModuloRepository;
+import mx.japs.portal.configuracion.repositorio.ParametroRepository;
+import mx.japs.portal.configuracion.repositorio.PortalRepository;
+import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
+import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.convert.converter.Converter;
@@ -26,22 +26,22 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     declare @type: ApplicationConversionServiceFactoryBean: @Configurable;
     
     @Autowired
-    MenuOpcionService ApplicationConversionServiceFactoryBean.menuOpcionService;
+    MenuOpcionRepository ApplicationConversionServiceFactoryBean.menuOpcionRepository;
     
     @Autowired
-    ModuloService ApplicationConversionServiceFactoryBean.moduloService;
+    ModuloRepository ApplicationConversionServiceFactoryBean.moduloRepository;
     
     @Autowired
-    ParametroService ApplicationConversionServiceFactoryBean.parametroService;
+    ParametroRepository ApplicationConversionServiceFactoryBean.parametroRepository;
     
     @Autowired
-    PortalService ApplicationConversionServiceFactoryBean.portalService;
+    PortalRepository ApplicationConversionServiceFactoryBean.portalRepository;
     
     @Autowired
-    ServicioService ApplicationConversionServiceFactoryBean.servicioService;
+    ServicioRepository ApplicationConversionServiceFactoryBean.servicioRepository;
     
     @Autowired
-    ServicioOperacionService ApplicationConversionServiceFactoryBean.servicioOperacionService;
+    ServicioOperacionRepository ApplicationConversionServiceFactoryBean.servicioOperacionRepository;
     
     public Converter<MenuOpcion, String> ApplicationConversionServiceFactoryBean.getMenuOpcionToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<mx.japs.portal.configuracion.modelo.MenuOpcion, java.lang.String>() {
@@ -54,7 +54,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Long, MenuOpcion> ApplicationConversionServiceFactoryBean.getIdToMenuOpcionConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.MenuOpcion>() {
             public mx.japs.portal.configuracion.modelo.MenuOpcion convert(java.lang.Long id) {
-                return menuOpcionService.findMenuOpcion(id);
+                return menuOpcionRepository.findOne(id);
             }
         };
     }
@@ -78,7 +78,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Long, Modulo> ApplicationConversionServiceFactoryBean.getIdToModuloConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.Modulo>() {
             public mx.japs.portal.configuracion.modelo.Modulo convert(java.lang.Long id) {
-                return moduloService.findModulo(id);
+                return moduloRepository.findOne(id);
             }
         };
     }
@@ -102,7 +102,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Long, Parametro> ApplicationConversionServiceFactoryBean.getIdToParametroConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.Parametro>() {
             public mx.japs.portal.configuracion.modelo.Parametro convert(java.lang.Long id) {
-                return parametroService.findParametro(id);
+                return parametroRepository.findOne(id);
             }
         };
     }
@@ -126,7 +126,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Long, Portal> ApplicationConversionServiceFactoryBean.getIdToPortalConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.Portal>() {
             public mx.japs.portal.configuracion.modelo.Portal convert(java.lang.Long id) {
-                return portalService.findPortal(id);
+                return portalRepository.findOne(id);
             }
         };
     }
@@ -150,7 +150,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Long, Servicio> ApplicationConversionServiceFactoryBean.getIdToServicioConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.Servicio>() {
             public mx.japs.portal.configuracion.modelo.Servicio convert(java.lang.Long id) {
-                return servicioService.findServicio(id);
+                return servicioRepository.findOne(id);
             }
         };
     }
@@ -174,7 +174,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Long, ServicioOperacion> ApplicationConversionServiceFactoryBean.getIdToServicioOperacionConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.ServicioOperacion>() {
             public mx.japs.portal.configuracion.modelo.ServicioOperacion convert(java.lang.Long id) {
-                return servicioOperacionService.findServicioOperacion(id);
+                return servicioOperacionRepository.findOne(id);
             }
         };
     }

@@ -10,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.MenuOpcionDataOnDemand;
 import mx.japs.portal.configuracion.modelo.MenuOpcionIntegrationTest;
 import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
-import mx.japs.portal.configuracion.servicio.MenuOpcionService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,47 +30,44 @@ privileged aspect MenuOpcionIntegrationTest_Roo_IntegrationTest {
     MenuOpcionDataOnDemand MenuOpcionIntegrationTest.dod;
     
     @Autowired
-    MenuOpcionService MenuOpcionIntegrationTest.menuOpcionService;
-    
-    @Autowired
     MenuOpcionRepository MenuOpcionIntegrationTest.menuOpcionRepository;
     
     @Test
-    public void MenuOpcionIntegrationTest.testCountAllMenuOpcions() {
+    public void MenuOpcionIntegrationTest.testCount() {
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", dod.getRandomMenuOpcion());
-        long count = menuOpcionService.countAllMenuOpcions();
+        long count = menuOpcionRepository.count();
         Assert.assertTrue("Counter for 'MenuOpcion' incorrectly reported there were no entries", count > 0);
     }
     
     @Test
-    public void MenuOpcionIntegrationTest.testFindMenuOpcion() {
+    public void MenuOpcionIntegrationTest.testFind() {
         MenuOpcion obj = dod.getRandomMenuOpcion();
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to provide an identifier", id);
-        obj = menuOpcionService.findMenuOpcion(id);
+        obj = menuOpcionRepository.findOne(id);
         Assert.assertNotNull("Find method for 'MenuOpcion' illegally returned null for id '" + id + "'", obj);
         Assert.assertEquals("Find method for 'MenuOpcion' returned the incorrect identifier", id, obj.getId());
     }
     
     @Test
-    public void MenuOpcionIntegrationTest.testFindAllMenuOpcions() {
+    public void MenuOpcionIntegrationTest.testFindAll() {
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", dod.getRandomMenuOpcion());
-        long count = menuOpcionService.countAllMenuOpcions();
+        long count = menuOpcionRepository.count();
         Assert.assertTrue("Too expensive to perform a find all test for 'MenuOpcion', as there are " + count + " entries; set the findAllMaximum to exceed this value or set findAll=false on the integration test annotation to disable the test", count < 250);
-        List<MenuOpcion> result = menuOpcionService.findAllMenuOpcions();
+        List<MenuOpcion> result = menuOpcionRepository.findAll();
         Assert.assertNotNull("Find all method for 'MenuOpcion' illegally returned null", result);
         Assert.assertTrue("Find all method for 'MenuOpcion' failed to return any data", result.size() > 0);
     }
     
     @Test
-    public void MenuOpcionIntegrationTest.testFindMenuOpcionEntries() {
+    public void MenuOpcionIntegrationTest.testFindEntries() {
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", dod.getRandomMenuOpcion());
-        long count = menuOpcionService.countAllMenuOpcions();
+        long count = menuOpcionRepository.count();
         if (count > 20) count = 20;
         int firstResult = 0;
         int maxResults = (int) count;
-        List<MenuOpcion> result = menuOpcionService.findMenuOpcionEntries(firstResult, maxResults);
+        List<MenuOpcion> result = menuOpcionRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / maxResults, maxResults)).getContent();
         Assert.assertNotNull("Find entries method for 'MenuOpcion' illegally returned null", result);
         Assert.assertEquals("Find entries method for 'MenuOpcion' returned an incorrect number of entries", count, result.size());
     }
@@ -82,7 +78,7 @@ privileged aspect MenuOpcionIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to provide an identifier", id);
-        obj = menuOpcionService.findMenuOpcion(id);
+        obj = menuOpcionRepository.findOne(id);
         Assert.assertNotNull("Find method for 'MenuOpcion' illegally returned null for id '" + id + "'", obj);
         boolean modified =  dod.modifyMenuOpcion(obj);
         Integer currentVersion = obj.getVersion();
@@ -91,28 +87,28 @@ privileged aspect MenuOpcionIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void MenuOpcionIntegrationTest.testUpdateMenuOpcionUpdate() {
+    public void MenuOpcionIntegrationTest.testSaveUpdate() {
         MenuOpcion obj = dod.getRandomMenuOpcion();
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to provide an identifier", id);
-        obj = menuOpcionService.findMenuOpcion(id);
+        obj = menuOpcionRepository.findOne(id);
         boolean modified =  dod.modifyMenuOpcion(obj);
         Integer currentVersion = obj.getVersion();
-        MenuOpcion merged = menuOpcionService.updateMenuOpcion(obj);
+        MenuOpcion merged = menuOpcionRepository.save(obj);
         menuOpcionRepository.flush();
         Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
         Assert.assertTrue("Version for 'MenuOpcion' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void MenuOpcionIntegrationTest.testSaveMenuOpcion() {
+    public void MenuOpcionIntegrationTest.testSave() {
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", dod.getRandomMenuOpcion());
         MenuOpcion obj = dod.getNewTransientMenuOpcion(Integer.MAX_VALUE);
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to provide a new transient entity", obj);
         Assert.assertNull("Expected 'MenuOpcion' identifier to be null", obj.getId());
         try {
-            menuOpcionService.saveMenuOpcion(obj);
+            menuOpcionRepository.save(obj);
         } catch (final ConstraintViolationException e) {
             final StringBuilder msg = new StringBuilder();
             for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
@@ -126,15 +122,15 @@ privileged aspect MenuOpcionIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void MenuOpcionIntegrationTest.testDeleteMenuOpcion() {
+    public void MenuOpcionIntegrationTest.testDelete() {
         MenuOpcion obj = dod.getRandomMenuOpcion();
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'MenuOpcion' failed to provide an identifier", id);
-        obj = menuOpcionService.findMenuOpcion(id);
-        menuOpcionService.deleteMenuOpcion(obj);
+        obj = menuOpcionRepository.findOne(id);
+        menuOpcionRepository.delete(obj);
         menuOpcionRepository.flush();
-        Assert.assertNull("Failed to remove 'MenuOpcion' with identifier '" + id + "'", menuOpcionService.findMenuOpcion(id));
+        Assert.assertNull("Failed to remove 'MenuOpcion' with identifier '" + id + "'", menuOpcionRepository.findOne(id));
     }
     
 }

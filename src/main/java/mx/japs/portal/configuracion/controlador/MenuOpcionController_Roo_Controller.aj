@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.MenuOpcionController;
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
-import mx.japs.portal.configuracion.servicio.MenuOpcionService;
-import mx.japs.portal.configuracion.servicio.ModuloService;
+import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
+import mx.japs.portal.configuracion.repositorio.ModuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +23,10 @@ import org.springframework.web.util.WebUtils;
 privileged aspect MenuOpcionController_Roo_Controller {
     
     @Autowired
-    MenuOpcionService MenuOpcionController.menuOpcionService;
+    MenuOpcionRepository MenuOpcionController.menuOpcionRepository;
     
     @Autowired
-    ModuloService MenuOpcionController.moduloService;
+    ModuloRepository MenuOpcionController.moduloRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String MenuOpcionController.create(@Valid MenuOpcion menuOpcion, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -35,7 +35,7 @@ privileged aspect MenuOpcionController_Roo_Controller {
             return "menuopcions/create";
         }
         uiModel.asMap().clear();
-        menuOpcionService.saveMenuOpcion(menuOpcion);
+        menuOpcionRepository.save(menuOpcion);
         return "redirect:/menuopcions/" + encodeUrlPathSegment(menuOpcion.getId().toString(), httpServletRequest);
     }
     
@@ -47,7 +47,7 @@ privileged aspect MenuOpcionController_Roo_Controller {
     
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String MenuOpcionController.show(@PathVariable("id") Long id, Model uiModel) {
-        uiModel.addAttribute("menuopcion", menuOpcionService.findMenuOpcion(id));
+        uiModel.addAttribute("menuopcion", menuOpcionRepository.findOne(id));
         uiModel.addAttribute("itemId", id);
         return "menuopcions/show";
     }
@@ -57,11 +57,11 @@ privileged aspect MenuOpcionController_Roo_Controller {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("menuopcions", menuOpcionService.findMenuOpcionEntries(firstResult, sizeNo));
-            float nrOfPages = (float) menuOpcionService.countAllMenuOpcions() / sizeNo;
+            uiModel.addAttribute("menuopcions", menuOpcionRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / sizeNo, sizeNo)).getContent());
+            float nrOfPages = (float) menuOpcionRepository.count() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("menuopcions", menuOpcionService.findAllMenuOpcions());
+            uiModel.addAttribute("menuopcions", menuOpcionRepository.findAll());
         }
         return "menuopcions/list";
     }
@@ -73,20 +73,20 @@ privileged aspect MenuOpcionController_Roo_Controller {
             return "menuopcions/update";
         }
         uiModel.asMap().clear();
-        menuOpcionService.updateMenuOpcion(menuOpcion);
+        menuOpcionRepository.save(menuOpcion);
         return "redirect:/menuopcions/" + encodeUrlPathSegment(menuOpcion.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String MenuOpcionController.updateForm(@PathVariable("id") Long id, Model uiModel) {
-        populateEditForm(uiModel, menuOpcionService.findMenuOpcion(id));
+        populateEditForm(uiModel, menuOpcionRepository.findOne(id));
         return "menuopcions/update";
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String MenuOpcionController.delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        MenuOpcion menuOpcion = menuOpcionService.findMenuOpcion(id);
-        menuOpcionService.deleteMenuOpcion(menuOpcion);
+        MenuOpcion menuOpcion = menuOpcionRepository.findOne(id);
+        menuOpcionRepository.delete(menuOpcion);
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
@@ -95,8 +95,8 @@ privileged aspect MenuOpcionController_Roo_Controller {
     
     void MenuOpcionController.populateEditForm(Model uiModel, MenuOpcion menuOpcion) {
         uiModel.addAttribute("menuOpcion", menuOpcion);
-        uiModel.addAttribute("menuopcions", menuOpcionService.findAllMenuOpcions());
-        uiModel.addAttribute("moduloes", moduloService.findAllModuloes());
+        uiModel.addAttribute("menuopcions", menuOpcionRepository.findAll());
+        uiModel.addAttribute("moduloes", moduloRepository.findAll());
     }
     
     String MenuOpcionController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

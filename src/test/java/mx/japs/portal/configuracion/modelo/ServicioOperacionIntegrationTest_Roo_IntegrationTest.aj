@@ -10,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.ServicioOperacionDataOnDemand;
 import mx.japs.portal.configuracion.modelo.ServicioOperacionIntegrationTest;
 import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
-import mx.japs.portal.configuracion.servicio.ServicioOperacionService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,47 +30,44 @@ privileged aspect ServicioOperacionIntegrationTest_Roo_IntegrationTest {
     ServicioOperacionDataOnDemand ServicioOperacionIntegrationTest.dod;
     
     @Autowired
-    ServicioOperacionService ServicioOperacionIntegrationTest.servicioOperacionService;
-    
-    @Autowired
     ServicioOperacionRepository ServicioOperacionIntegrationTest.servicioOperacionRepository;
     
     @Test
-    public void ServicioOperacionIntegrationTest.testCountAllServicioOperacions() {
+    public void ServicioOperacionIntegrationTest.testCount() {
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", dod.getRandomServicioOperacion());
-        long count = servicioOperacionService.countAllServicioOperacions();
+        long count = servicioOperacionRepository.count();
         Assert.assertTrue("Counter for 'ServicioOperacion' incorrectly reported there were no entries", count > 0);
     }
     
     @Test
-    public void ServicioOperacionIntegrationTest.testFindServicioOperacion() {
+    public void ServicioOperacionIntegrationTest.testFind() {
         ServicioOperacion obj = dod.getRandomServicioOperacion();
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to provide an identifier", id);
-        obj = servicioOperacionService.findServicioOperacion(id);
+        obj = servicioOperacionRepository.findOne(id);
         Assert.assertNotNull("Find method for 'ServicioOperacion' illegally returned null for id '" + id + "'", obj);
         Assert.assertEquals("Find method for 'ServicioOperacion' returned the incorrect identifier", id, obj.getId());
     }
     
     @Test
-    public void ServicioOperacionIntegrationTest.testFindAllServicioOperacions() {
+    public void ServicioOperacionIntegrationTest.testFindAll() {
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", dod.getRandomServicioOperacion());
-        long count = servicioOperacionService.countAllServicioOperacions();
+        long count = servicioOperacionRepository.count();
         Assert.assertTrue("Too expensive to perform a find all test for 'ServicioOperacion', as there are " + count + " entries; set the findAllMaximum to exceed this value or set findAll=false on the integration test annotation to disable the test", count < 250);
-        List<ServicioOperacion> result = servicioOperacionService.findAllServicioOperacions();
+        List<ServicioOperacion> result = servicioOperacionRepository.findAll();
         Assert.assertNotNull("Find all method for 'ServicioOperacion' illegally returned null", result);
         Assert.assertTrue("Find all method for 'ServicioOperacion' failed to return any data", result.size() > 0);
     }
     
     @Test
-    public void ServicioOperacionIntegrationTest.testFindServicioOperacionEntries() {
+    public void ServicioOperacionIntegrationTest.testFindEntries() {
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", dod.getRandomServicioOperacion());
-        long count = servicioOperacionService.countAllServicioOperacions();
+        long count = servicioOperacionRepository.count();
         if (count > 20) count = 20;
         int firstResult = 0;
         int maxResults = (int) count;
-        List<ServicioOperacion> result = servicioOperacionService.findServicioOperacionEntries(firstResult, maxResults);
+        List<ServicioOperacion> result = servicioOperacionRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / maxResults, maxResults)).getContent();
         Assert.assertNotNull("Find entries method for 'ServicioOperacion' illegally returned null", result);
         Assert.assertEquals("Find entries method for 'ServicioOperacion' returned an incorrect number of entries", count, result.size());
     }
@@ -82,7 +78,7 @@ privileged aspect ServicioOperacionIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to provide an identifier", id);
-        obj = servicioOperacionService.findServicioOperacion(id);
+        obj = servicioOperacionRepository.findOne(id);
         Assert.assertNotNull("Find method for 'ServicioOperacion' illegally returned null for id '" + id + "'", obj);
         boolean modified =  dod.modifyServicioOperacion(obj);
         Integer currentVersion = obj.getVersion();
@@ -91,28 +87,28 @@ privileged aspect ServicioOperacionIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ServicioOperacionIntegrationTest.testUpdateServicioOperacionUpdate() {
+    public void ServicioOperacionIntegrationTest.testSaveUpdate() {
         ServicioOperacion obj = dod.getRandomServicioOperacion();
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to provide an identifier", id);
-        obj = servicioOperacionService.findServicioOperacion(id);
+        obj = servicioOperacionRepository.findOne(id);
         boolean modified =  dod.modifyServicioOperacion(obj);
         Integer currentVersion = obj.getVersion();
-        ServicioOperacion merged = servicioOperacionService.updateServicioOperacion(obj);
+        ServicioOperacion merged = servicioOperacionRepository.save(obj);
         servicioOperacionRepository.flush();
         Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
         Assert.assertTrue("Version for 'ServicioOperacion' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void ServicioOperacionIntegrationTest.testSaveServicioOperacion() {
+    public void ServicioOperacionIntegrationTest.testSave() {
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", dod.getRandomServicioOperacion());
         ServicioOperacion obj = dod.getNewTransientServicioOperacion(Integer.MAX_VALUE);
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to provide a new transient entity", obj);
         Assert.assertNull("Expected 'ServicioOperacion' identifier to be null", obj.getId());
         try {
-            servicioOperacionService.saveServicioOperacion(obj);
+            servicioOperacionRepository.save(obj);
         } catch (final ConstraintViolationException e) {
             final StringBuilder msg = new StringBuilder();
             for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
@@ -126,15 +122,15 @@ privileged aspect ServicioOperacionIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ServicioOperacionIntegrationTest.testDeleteServicioOperacion() {
+    public void ServicioOperacionIntegrationTest.testDelete() {
         ServicioOperacion obj = dod.getRandomServicioOperacion();
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'ServicioOperacion' failed to provide an identifier", id);
-        obj = servicioOperacionService.findServicioOperacion(id);
-        servicioOperacionService.deleteServicioOperacion(obj);
+        obj = servicioOperacionRepository.findOne(id);
+        servicioOperacionRepository.delete(obj);
         servicioOperacionRepository.flush();
-        Assert.assertNull("Failed to remove 'ServicioOperacion' with identifier '" + id + "'", servicioOperacionService.findServicioOperacion(id));
+        Assert.assertNull("Failed to remove 'ServicioOperacion' with identifier '" + id + "'", servicioOperacionRepository.findOne(id));
     }
     
 }

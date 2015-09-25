@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.ServicioOperacionController;
 import mx.japs.portal.configuracion.modelo.ServicioOperacion;
-import mx.japs.portal.configuracion.servicio.ServicioOperacionService;
-import mx.japs.portal.configuracion.servicio.ServicioService;
+import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
+import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +23,10 @@ import org.springframework.web.util.WebUtils;
 privileged aspect ServicioOperacionController_Roo_Controller {
     
     @Autowired
-    ServicioOperacionService ServicioOperacionController.servicioOperacionService;
+    ServicioOperacionRepository ServicioOperacionController.servicioOperacionRepository;
     
     @Autowired
-    ServicioService ServicioOperacionController.servicioService;
+    ServicioRepository ServicioOperacionController.servicioRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String ServicioOperacionController.create(@Valid ServicioOperacion servicioOperacion, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -35,7 +35,7 @@ privileged aspect ServicioOperacionController_Roo_Controller {
             return "serviciooperacions/create";
         }
         uiModel.asMap().clear();
-        servicioOperacionService.saveServicioOperacion(servicioOperacion);
+        servicioOperacionRepository.save(servicioOperacion);
         return "redirect:/serviciooperacions/" + encodeUrlPathSegment(servicioOperacion.getId().toString(), httpServletRequest);
     }
     
@@ -47,7 +47,7 @@ privileged aspect ServicioOperacionController_Roo_Controller {
     
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String ServicioOperacionController.show(@PathVariable("id") Long id, Model uiModel) {
-        uiModel.addAttribute("serviciooperacion", servicioOperacionService.findServicioOperacion(id));
+        uiModel.addAttribute("serviciooperacion", servicioOperacionRepository.findOne(id));
         uiModel.addAttribute("itemId", id);
         return "serviciooperacions/show";
     }
@@ -57,11 +57,11 @@ privileged aspect ServicioOperacionController_Roo_Controller {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("serviciooperacions", servicioOperacionService.findServicioOperacionEntries(firstResult, sizeNo));
-            float nrOfPages = (float) servicioOperacionService.countAllServicioOperacions() / sizeNo;
+            uiModel.addAttribute("serviciooperacions", servicioOperacionRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / sizeNo, sizeNo)).getContent());
+            float nrOfPages = (float) servicioOperacionRepository.count() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("serviciooperacions", servicioOperacionService.findAllServicioOperacions());
+            uiModel.addAttribute("serviciooperacions", servicioOperacionRepository.findAll());
         }
         return "serviciooperacions/list";
     }
@@ -73,20 +73,20 @@ privileged aspect ServicioOperacionController_Roo_Controller {
             return "serviciooperacions/update";
         }
         uiModel.asMap().clear();
-        servicioOperacionService.updateServicioOperacion(servicioOperacion);
+        servicioOperacionRepository.save(servicioOperacion);
         return "redirect:/serviciooperacions/" + encodeUrlPathSegment(servicioOperacion.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String ServicioOperacionController.updateForm(@PathVariable("id") Long id, Model uiModel) {
-        populateEditForm(uiModel, servicioOperacionService.findServicioOperacion(id));
+        populateEditForm(uiModel, servicioOperacionRepository.findOne(id));
         return "serviciooperacions/update";
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String ServicioOperacionController.delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        ServicioOperacion servicioOperacion = servicioOperacionService.findServicioOperacion(id);
-        servicioOperacionService.deleteServicioOperacion(servicioOperacion);
+        ServicioOperacion servicioOperacion = servicioOperacionRepository.findOne(id);
+        servicioOperacionRepository.delete(servicioOperacion);
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
@@ -95,7 +95,7 @@ privileged aspect ServicioOperacionController_Roo_Controller {
     
     void ServicioOperacionController.populateEditForm(Model uiModel, ServicioOperacion servicioOperacion) {
         uiModel.addAttribute("servicioOperacion", servicioOperacion);
-        uiModel.addAttribute("servicios", servicioService.findAllServicios());
+        uiModel.addAttribute("servicios", servicioRepository.findAll());
     }
     
     String ServicioOperacionController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

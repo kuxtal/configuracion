@@ -24,7 +24,7 @@ privileged aspect MenuOpcionController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            MenuOpcion menuOpcion = menuOpcionService.findMenuOpcion(id);
+            MenuOpcion menuOpcion = menuOpcionRepository.findOne(id);
             if (menuOpcion == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
@@ -40,7 +40,7 @@ privileged aspect MenuOpcionController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            List<MenuOpcion> result = menuOpcionService.findAllMenuOpcions();
+            List<MenuOpcion> result = menuOpcionRepository.findAll();
             return new ResponseEntity<String>(MenuOpcion.toJsonArray(result), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,7 +53,7 @@ privileged aspect MenuOpcionController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             MenuOpcion menuOpcion = MenuOpcion.fromJsonToMenuOpcion(json);
-            menuOpcionService.saveMenuOpcion(menuOpcion);
+            menuOpcionRepository.save(menuOpcion);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
             headers.add("Location",uriBuilder.path(a.value()[0]+"/"+menuOpcion.getId().toString()).build().toUriString());
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
@@ -68,7 +68,7 @@ privileged aspect MenuOpcionController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             for (MenuOpcion menuOpcion: MenuOpcion.fromJsonArrayToMenuOpcions(json)) {
-                menuOpcionService.saveMenuOpcion(menuOpcion);
+                menuOpcionRepository.save(menuOpcion);
             }
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ privileged aspect MenuOpcionController_Roo_Controller_Json {
         try {
             MenuOpcion menuOpcion = MenuOpcion.fromJsonToMenuOpcion(json);
             menuOpcion.setId(id);
-            if (menuOpcionService.updateMenuOpcion(menuOpcion) == null) {
+            if (menuOpcionRepository.save(menuOpcion) == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<String>(headers, HttpStatus.OK);
@@ -97,11 +97,11 @@ privileged aspect MenuOpcionController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-            MenuOpcion menuOpcion = menuOpcionService.findMenuOpcion(id);
+            MenuOpcion menuOpcion = menuOpcionRepository.findOne(id);
             if (menuOpcion == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
-            menuOpcionService.deleteMenuOpcion(menuOpcion);
+            menuOpcionRepository.delete(menuOpcion);
             return new ResponseEntity<String>(headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);

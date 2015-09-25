@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.ParametroController;
 import mx.japs.portal.configuracion.modelo.Parametro;
-import mx.japs.portal.configuracion.servicio.ParametroService;
-import mx.japs.portal.configuracion.servicio.PortalService;
+import mx.japs.portal.configuracion.repositorio.ParametroRepository;
+import mx.japs.portal.configuracion.repositorio.PortalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +23,10 @@ import org.springframework.web.util.WebUtils;
 privileged aspect ParametroController_Roo_Controller {
     
     @Autowired
-    ParametroService ParametroController.parametroService;
+    ParametroRepository ParametroController.parametroRepository;
     
     @Autowired
-    PortalService ParametroController.portalService;
+    PortalRepository ParametroController.portalRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String ParametroController.create(@Valid Parametro parametro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -35,7 +35,7 @@ privileged aspect ParametroController_Roo_Controller {
             return "parametroes/create";
         }
         uiModel.asMap().clear();
-        parametroService.saveParametro(parametro);
+        parametroRepository.save(parametro);
         return "redirect:/parametroes/" + encodeUrlPathSegment(parametro.getId().toString(), httpServletRequest);
     }
     
@@ -47,7 +47,7 @@ privileged aspect ParametroController_Roo_Controller {
     
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String ParametroController.show(@PathVariable("id") Long id, Model uiModel) {
-        uiModel.addAttribute("parametro", parametroService.findParametro(id));
+        uiModel.addAttribute("parametro", parametroRepository.findOne(id));
         uiModel.addAttribute("itemId", id);
         return "parametroes/show";
     }
@@ -57,11 +57,11 @@ privileged aspect ParametroController_Roo_Controller {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("parametroes", parametroService.findParametroEntries(firstResult, sizeNo));
-            float nrOfPages = (float) parametroService.countAllParametroes() / sizeNo;
+            uiModel.addAttribute("parametroes", parametroRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / sizeNo, sizeNo)).getContent());
+            float nrOfPages = (float) parametroRepository.count() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("parametroes", parametroService.findAllParametroes());
+            uiModel.addAttribute("parametroes", parametroRepository.findAll());
         }
         return "parametroes/list";
     }
@@ -73,20 +73,20 @@ privileged aspect ParametroController_Roo_Controller {
             return "parametroes/update";
         }
         uiModel.asMap().clear();
-        parametroService.updateParametro(parametro);
+        parametroRepository.save(parametro);
         return "redirect:/parametroes/" + encodeUrlPathSegment(parametro.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String ParametroController.updateForm(@PathVariable("id") Long id, Model uiModel) {
-        populateEditForm(uiModel, parametroService.findParametro(id));
+        populateEditForm(uiModel, parametroRepository.findOne(id));
         return "parametroes/update";
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String ParametroController.delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Parametro parametro = parametroService.findParametro(id);
-        parametroService.deleteParametro(parametro);
+        Parametro parametro = parametroRepository.findOne(id);
+        parametroRepository.delete(parametro);
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
@@ -95,7 +95,7 @@ privileged aspect ParametroController_Roo_Controller {
     
     void ParametroController.populateEditForm(Model uiModel, Parametro parametro) {
         uiModel.addAttribute("parametro", parametro);
-        uiModel.addAttribute("portals", portalService.findAllPortals());
+        uiModel.addAttribute("portals", portalRepository.findAll());
     }
     
     String ParametroController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

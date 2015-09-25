@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.ServicioController;
 import mx.japs.portal.configuracion.modelo.Servicio;
-import mx.japs.portal.configuracion.servicio.PortalService;
-import mx.japs.portal.configuracion.servicio.ServicioOperacionService;
-import mx.japs.portal.configuracion.servicio.ServicioService;
+import mx.japs.portal.configuracion.repositorio.PortalRepository;
+import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
+import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,13 +24,13 @@ import org.springframework.web.util.WebUtils;
 privileged aspect ServicioController_Roo_Controller {
     
     @Autowired
-    ServicioService ServicioController.servicioService;
+    ServicioRepository ServicioController.servicioRepository;
     
     @Autowired
-    PortalService ServicioController.portalService;
+    PortalRepository ServicioController.portalRepository;
     
     @Autowired
-    ServicioOperacionService ServicioController.servicioOperacionService;
+    ServicioOperacionRepository ServicioController.servicioOperacionRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String ServicioController.create(@Valid Servicio servicio, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -39,7 +39,7 @@ privileged aspect ServicioController_Roo_Controller {
             return "servicios/create";
         }
         uiModel.asMap().clear();
-        servicioService.saveServicio(servicio);
+        servicioRepository.save(servicio);
         return "redirect:/servicios/" + encodeUrlPathSegment(servicio.getId().toString(), httpServletRequest);
     }
     
@@ -51,7 +51,7 @@ privileged aspect ServicioController_Roo_Controller {
     
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String ServicioController.show(@PathVariable("id") Long id, Model uiModel) {
-        uiModel.addAttribute("servicio", servicioService.findServicio(id));
+        uiModel.addAttribute("servicio", servicioRepository.findOne(id));
         uiModel.addAttribute("itemId", id);
         return "servicios/show";
     }
@@ -61,11 +61,11 @@ privileged aspect ServicioController_Roo_Controller {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("servicios", servicioService.findServicioEntries(firstResult, sizeNo));
-            float nrOfPages = (float) servicioService.countAllServicios() / sizeNo;
+            uiModel.addAttribute("servicios", servicioRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / sizeNo, sizeNo)).getContent());
+            float nrOfPages = (float) servicioRepository.count() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("servicios", servicioService.findAllServicios());
+            uiModel.addAttribute("servicios", servicioRepository.findAll());
         }
         return "servicios/list";
     }
@@ -77,20 +77,20 @@ privileged aspect ServicioController_Roo_Controller {
             return "servicios/update";
         }
         uiModel.asMap().clear();
-        servicioService.updateServicio(servicio);
+        servicioRepository.save(servicio);
         return "redirect:/servicios/" + encodeUrlPathSegment(servicio.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String ServicioController.updateForm(@PathVariable("id") Long id, Model uiModel) {
-        populateEditForm(uiModel, servicioService.findServicio(id));
+        populateEditForm(uiModel, servicioRepository.findOne(id));
         return "servicios/update";
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String ServicioController.delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Servicio servicio = servicioService.findServicio(id);
-        servicioService.deleteServicio(servicio);
+        Servicio servicio = servicioRepository.findOne(id);
+        servicioRepository.delete(servicio);
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
@@ -99,8 +99,8 @@ privileged aspect ServicioController_Roo_Controller {
     
     void ServicioController.populateEditForm(Model uiModel, Servicio servicio) {
         uiModel.addAttribute("servicio", servicio);
-        uiModel.addAttribute("portals", portalService.findAllPortals());
-        uiModel.addAttribute("serviciooperacions", servicioOperacionService.findAllServicioOperacions());
+        uiModel.addAttribute("portals", portalRepository.findAll());
+        uiModel.addAttribute("serviciooperacions", servicioOperacionRepository.findAll());
     }
     
     String ServicioController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

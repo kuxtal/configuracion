@@ -13,7 +13,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.Portal;
 import mx.japs.portal.configuracion.modelo.PortalDataOnDemand;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
-import mx.japs.portal.configuracion.servicio.PortalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +23,6 @@ privileged aspect PortalDataOnDemand_Roo_DataOnDemand {
     private Random PortalDataOnDemand.rnd = new SecureRandom();
     
     private List<Portal> PortalDataOnDemand.data;
-    
-    @Autowired
-    PortalService PortalDataOnDemand.portalService;
     
     @Autowired
     PortalRepository PortalDataOnDemand.portalRepository;
@@ -70,14 +66,14 @@ privileged aspect PortalDataOnDemand_Roo_DataOnDemand {
         }
         Portal obj = data.get(index);
         Long id = obj.getId();
-        return portalService.findPortal(id);
+        return portalRepository.findOne(id);
     }
     
     public Portal PortalDataOnDemand.getRandomPortal() {
         init();
         Portal obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return portalService.findPortal(id);
+        return portalRepository.findOne(id);
     }
     
     public boolean PortalDataOnDemand.modifyPortal(Portal obj) {
@@ -87,7 +83,7 @@ privileged aspect PortalDataOnDemand_Roo_DataOnDemand {
     public void PortalDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = portalService.findPortalEntries(from, to);
+        data = portalRepository.findAll(new org.springframework.data.domain.PageRequest(from / to, to)).getContent();
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'Portal' illegally returned null");
         }
@@ -99,7 +95,7 @@ privileged aspect PortalDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             Portal obj = getNewTransientPortal(i);
             try {
-                portalService.savePortal(obj);
+                portalRepository.save(obj);
             } catch (final ConstraintViolationException e) {
                 final StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {

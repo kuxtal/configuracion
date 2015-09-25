@@ -24,13 +24,13 @@ privileged aspect ParametroController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            Parametro parametro = parametroService.findParametro(id);
+            Parametro parametro = parametroRepository.findOne(id);
             if (parametro == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<String>(parametro.toJson(), headers, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>("{\"ERROR\":\""+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -40,10 +40,10 @@ privileged aspect ParametroController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            List<Parametro> result = parametroService.findAllParametroes();
+            List<Parametro> result = parametroRepository.findAll();
             return new ResponseEntity<String>(Parametro.toJsonArray(result), headers, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>("{\"ERROR\":\""+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -53,12 +53,12 @@ privileged aspect ParametroController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             Parametro parametro = Parametro.fromJsonToParametro(json);
-            parametroService.saveParametro(parametro);
+            parametroRepository.save(parametro);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
             headers.add("Location",uriBuilder.path(a.value()[0]+"/"+parametro.getId().toString()).build().toUriString());
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<String>("{\"ERROR\":\""+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -68,11 +68,11 @@ privileged aspect ParametroController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             for (Parametro parametro: Parametro.fromJsonArrayToParametroes(json)) {
-                parametroService.saveParametro(parametro);
+                parametroRepository.save(parametro);
             }
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<String>("{\"ERROR\":\""+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -83,7 +83,7 @@ privileged aspect ParametroController_Roo_Controller_Json {
         try {
             Parametro parametro = Parametro.fromJsonToParametro(json);
             parametro.setId(id);
-            if (parametroService.updateParametro(parametro) == null) {
+            if (parametroRepository.save(parametro) == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<String>(headers, HttpStatus.OK);
@@ -97,14 +97,14 @@ privileged aspect ParametroController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-            Parametro parametro = parametroService.findParametro(id);
+            Parametro parametro = parametroRepository.findOne(id);
             if (parametro == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
-            parametroService.deleteParametro(parametro);
+            parametroRepository.delete(parametro);
             return new ResponseEntity<String>(headers, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>("{\"ERROR\":\""+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     

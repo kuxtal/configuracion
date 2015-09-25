@@ -14,7 +14,6 @@ import mx.japs.portal.configuracion.modelo.PortalDataOnDemand;
 import mx.japs.portal.configuracion.modelo.Servicio;
 import mx.japs.portal.configuracion.modelo.ServicioDataOnDemand;
 import mx.japs.portal.configuracion.repositorio.ServicioRepository;
-import mx.japs.portal.configuracion.servicio.ServicioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +27,6 @@ privileged aspect ServicioDataOnDemand_Roo_DataOnDemand {
     
     @Autowired
     PortalDataOnDemand ServicioDataOnDemand.portalDataOnDemand;
-    
-    @Autowired
-    ServicioService ServicioDataOnDemand.servicioService;
     
     @Autowired
     ServicioRepository ServicioDataOnDemand.servicioRepository;
@@ -68,14 +64,14 @@ privileged aspect ServicioDataOnDemand_Roo_DataOnDemand {
         }
         Servicio obj = data.get(index);
         Long id = obj.getId();
-        return servicioService.findServicio(id);
+        return servicioRepository.findOne(id);
     }
     
     public Servicio ServicioDataOnDemand.getRandomServicio() {
         init();
         Servicio obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return servicioService.findServicio(id);
+        return servicioRepository.findOne(id);
     }
     
     public boolean ServicioDataOnDemand.modifyServicio(Servicio obj) {
@@ -85,7 +81,7 @@ privileged aspect ServicioDataOnDemand_Roo_DataOnDemand {
     public void ServicioDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = servicioService.findServicioEntries(from, to);
+        data = servicioRepository.findAll(new org.springframework.data.domain.PageRequest(from / to, to)).getContent();
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'Servicio' illegally returned null");
         }
@@ -97,7 +93,7 @@ privileged aspect ServicioDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             Servicio obj = getNewTransientServicio(i);
             try {
-                servicioService.saveServicio(obj);
+                servicioRepository.save(obj);
             } catch (final ConstraintViolationException e) {
                 final StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {

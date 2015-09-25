@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.ModuloController;
 import mx.japs.portal.configuracion.modelo.Modulo;
-import mx.japs.portal.configuracion.servicio.MenuOpcionService;
-import mx.japs.portal.configuracion.servicio.ModuloService;
-import mx.japs.portal.configuracion.servicio.PortalService;
+import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
+import mx.japs.portal.configuracion.repositorio.ModuloRepository;
+import mx.japs.portal.configuracion.repositorio.PortalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,13 +24,13 @@ import org.springframework.web.util.WebUtils;
 privileged aspect ModuloController_Roo_Controller {
     
     @Autowired
-    ModuloService ModuloController.moduloService;
+    ModuloRepository ModuloController.moduloRepository;
     
     @Autowired
-    MenuOpcionService ModuloController.menuOpcionService;
+    MenuOpcionRepository ModuloController.menuOpcionRepository;
     
     @Autowired
-    PortalService ModuloController.portalService;
+    PortalRepository ModuloController.portalRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String ModuloController.create(@Valid Modulo modulo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -39,7 +39,7 @@ privileged aspect ModuloController_Roo_Controller {
             return "moduloes/create";
         }
         uiModel.asMap().clear();
-        moduloService.saveModulo(modulo);
+        moduloRepository.save(modulo);
         return "redirect:/moduloes/" + encodeUrlPathSegment(modulo.getId().toString(), httpServletRequest);
     }
     
@@ -51,7 +51,7 @@ privileged aspect ModuloController_Roo_Controller {
     
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String ModuloController.show(@PathVariable("id") Long id, Model uiModel) {
-        uiModel.addAttribute("modulo", moduloService.findModulo(id));
+        uiModel.addAttribute("modulo", moduloRepository.findOne(id));
         uiModel.addAttribute("itemId", id);
         return "moduloes/show";
     }
@@ -61,11 +61,11 @@ privileged aspect ModuloController_Roo_Controller {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("moduloes", moduloService.findModuloEntries(firstResult, sizeNo));
-            float nrOfPages = (float) moduloService.countAllModuloes() / sizeNo;
+            uiModel.addAttribute("moduloes", moduloRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / sizeNo, sizeNo)).getContent());
+            float nrOfPages = (float) moduloRepository.count() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("moduloes", moduloService.findAllModuloes());
+            uiModel.addAttribute("moduloes", moduloRepository.findAll());
         }
         return "moduloes/list";
     }
@@ -77,20 +77,20 @@ privileged aspect ModuloController_Roo_Controller {
             return "moduloes/update";
         }
         uiModel.asMap().clear();
-        moduloService.updateModulo(modulo);
+        moduloRepository.save(modulo);
         return "redirect:/moduloes/" + encodeUrlPathSegment(modulo.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String ModuloController.updateForm(@PathVariable("id") Long id, Model uiModel) {
-        populateEditForm(uiModel, moduloService.findModulo(id));
+        populateEditForm(uiModel, moduloRepository.findOne(id));
         return "moduloes/update";
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String ModuloController.delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Modulo modulo = moduloService.findModulo(id);
-        moduloService.deleteModulo(modulo);
+        Modulo modulo = moduloRepository.findOne(id);
+        moduloRepository.delete(modulo);
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
@@ -99,8 +99,8 @@ privileged aspect ModuloController_Roo_Controller {
     
     void ModuloController.populateEditForm(Model uiModel, Modulo modulo) {
         uiModel.addAttribute("modulo", modulo);
-        uiModel.addAttribute("menuopcions", menuOpcionService.findAllMenuOpcions());
-        uiModel.addAttribute("portals", portalService.findAllPortals());
+        uiModel.addAttribute("menuopcions", menuOpcionRepository.findAll());
+        uiModel.addAttribute("portals", portalRepository.findAll());
     }
     
     String ModuloController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

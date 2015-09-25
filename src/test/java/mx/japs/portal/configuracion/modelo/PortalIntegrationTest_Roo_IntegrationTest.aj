@@ -10,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.PortalDataOnDemand;
 import mx.japs.portal.configuracion.modelo.PortalIntegrationTest;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
-import mx.japs.portal.configuracion.servicio.PortalService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,47 +30,44 @@ privileged aspect PortalIntegrationTest_Roo_IntegrationTest {
     PortalDataOnDemand PortalIntegrationTest.dod;
     
     @Autowired
-    PortalService PortalIntegrationTest.portalService;
-    
-    @Autowired
     PortalRepository PortalIntegrationTest.portalRepository;
     
     @Test
-    public void PortalIntegrationTest.testCountAllPortals() {
+    public void PortalIntegrationTest.testCount() {
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", dod.getRandomPortal());
-        long count = portalService.countAllPortals();
+        long count = portalRepository.count();
         Assert.assertTrue("Counter for 'Portal' incorrectly reported there were no entries", count > 0);
     }
     
     @Test
-    public void PortalIntegrationTest.testFindPortal() {
+    public void PortalIntegrationTest.testFind() {
         Portal obj = dod.getRandomPortal();
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Portal' failed to provide an identifier", id);
-        obj = portalService.findPortal(id);
+        obj = portalRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Portal' illegally returned null for id '" + id + "'", obj);
         Assert.assertEquals("Find method for 'Portal' returned the incorrect identifier", id, obj.getId());
     }
     
     @Test
-    public void PortalIntegrationTest.testFindAllPortals() {
+    public void PortalIntegrationTest.testFindAll() {
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", dod.getRandomPortal());
-        long count = portalService.countAllPortals();
+        long count = portalRepository.count();
         Assert.assertTrue("Too expensive to perform a find all test for 'Portal', as there are " + count + " entries; set the findAllMaximum to exceed this value or set findAll=false on the integration test annotation to disable the test", count < 250);
-        List<Portal> result = portalService.findAllPortals();
+        List<Portal> result = portalRepository.findAll();
         Assert.assertNotNull("Find all method for 'Portal' illegally returned null", result);
         Assert.assertTrue("Find all method for 'Portal' failed to return any data", result.size() > 0);
     }
     
     @Test
-    public void PortalIntegrationTest.testFindPortalEntries() {
+    public void PortalIntegrationTest.testFindEntries() {
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", dod.getRandomPortal());
-        long count = portalService.countAllPortals();
+        long count = portalRepository.count();
         if (count > 20) count = 20;
         int firstResult = 0;
         int maxResults = (int) count;
-        List<Portal> result = portalService.findPortalEntries(firstResult, maxResults);
+        List<Portal> result = portalRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / maxResults, maxResults)).getContent();
         Assert.assertNotNull("Find entries method for 'Portal' illegally returned null", result);
         Assert.assertEquals("Find entries method for 'Portal' returned an incorrect number of entries", count, result.size());
     }
@@ -82,7 +78,7 @@ privileged aspect PortalIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Portal' failed to provide an identifier", id);
-        obj = portalService.findPortal(id);
+        obj = portalRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Portal' illegally returned null for id '" + id + "'", obj);
         boolean modified =  dod.modifyPortal(obj);
         Integer currentVersion = obj.getVersion();
@@ -91,28 +87,28 @@ privileged aspect PortalIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void PortalIntegrationTest.testUpdatePortalUpdate() {
+    public void PortalIntegrationTest.testSaveUpdate() {
         Portal obj = dod.getRandomPortal();
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Portal' failed to provide an identifier", id);
-        obj = portalService.findPortal(id);
+        obj = portalRepository.findOne(id);
         boolean modified =  dod.modifyPortal(obj);
         Integer currentVersion = obj.getVersion();
-        Portal merged = portalService.updatePortal(obj);
+        Portal merged = portalRepository.save(obj);
         portalRepository.flush();
         Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
         Assert.assertTrue("Version for 'Portal' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void PortalIntegrationTest.testSavePortal() {
+    public void PortalIntegrationTest.testSave() {
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", dod.getRandomPortal());
         Portal obj = dod.getNewTransientPortal(Integer.MAX_VALUE);
         Assert.assertNotNull("Data on demand for 'Portal' failed to provide a new transient entity", obj);
         Assert.assertNull("Expected 'Portal' identifier to be null", obj.getId());
         try {
-            portalService.savePortal(obj);
+            portalRepository.save(obj);
         } catch (final ConstraintViolationException e) {
             final StringBuilder msg = new StringBuilder();
             for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
@@ -126,15 +122,15 @@ privileged aspect PortalIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void PortalIntegrationTest.testDeletePortal() {
+    public void PortalIntegrationTest.testDelete() {
         Portal obj = dod.getRandomPortal();
         Assert.assertNotNull("Data on demand for 'Portal' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Portal' failed to provide an identifier", id);
-        obj = portalService.findPortal(id);
-        portalService.deletePortal(obj);
+        obj = portalRepository.findOne(id);
+        portalRepository.delete(obj);
         portalRepository.flush();
-        Assert.assertNull("Failed to remove 'Portal' with identifier '" + id + "'", portalService.findPortal(id));
+        Assert.assertNull("Failed to remove 'Portal' with identifier '" + id + "'", portalRepository.findOne(id));
     }
     
 }

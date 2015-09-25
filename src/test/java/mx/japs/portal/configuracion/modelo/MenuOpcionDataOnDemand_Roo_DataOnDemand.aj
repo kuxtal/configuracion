@@ -14,7 +14,6 @@ import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.MenuOpcionDataOnDemand;
 import mx.japs.portal.configuracion.modelo.ModuloDataOnDemand;
 import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
-import mx.japs.portal.configuracion.servicio.MenuOpcionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +27,6 @@ privileged aspect MenuOpcionDataOnDemand_Roo_DataOnDemand {
     
     @Autowired
     ModuloDataOnDemand MenuOpcionDataOnDemand.moduloDataOnDemand;
-    
-    @Autowired
-    MenuOpcionService MenuOpcionDataOnDemand.menuOpcionService;
     
     @Autowired
     MenuOpcionRepository MenuOpcionDataOnDemand.menuOpcionRepository;
@@ -74,14 +70,14 @@ privileged aspect MenuOpcionDataOnDemand_Roo_DataOnDemand {
         }
         MenuOpcion obj = data.get(index);
         Long id = obj.getId();
-        return menuOpcionService.findMenuOpcion(id);
+        return menuOpcionRepository.findOne(id);
     }
     
     public MenuOpcion MenuOpcionDataOnDemand.getRandomMenuOpcion() {
         init();
         MenuOpcion obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return menuOpcionService.findMenuOpcion(id);
+        return menuOpcionRepository.findOne(id);
     }
     
     public boolean MenuOpcionDataOnDemand.modifyMenuOpcion(MenuOpcion obj) {
@@ -91,7 +87,7 @@ privileged aspect MenuOpcionDataOnDemand_Roo_DataOnDemand {
     public void MenuOpcionDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = menuOpcionService.findMenuOpcionEntries(from, to);
+        data = menuOpcionRepository.findAll(new org.springframework.data.domain.PageRequest(from / to, to)).getContent();
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'MenuOpcion' illegally returned null");
         }
@@ -103,7 +99,7 @@ privileged aspect MenuOpcionDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             MenuOpcion obj = getNewTransientMenuOpcion(i);
             try {
-                menuOpcionService.saveMenuOpcion(obj);
+                menuOpcionRepository.save(obj);
             } catch (final ConstraintViolationException e) {
                 final StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {

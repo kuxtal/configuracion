@@ -24,7 +24,7 @@ privileged aspect ServicioController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            Servicio servicio = servicioService.findServicio(id);
+            Servicio servicio = servicioRepository.findOne(id);
             if (servicio == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
@@ -40,7 +40,7 @@ privileged aspect ServicioController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            List<Servicio> result = servicioService.findAllServicios();
+            List<Servicio> result = servicioRepository.findAll();
             return new ResponseEntity<String>(Servicio.toJsonArray(result), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,7 +53,7 @@ privileged aspect ServicioController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             Servicio servicio = Servicio.fromJsonToServicio(json);
-            servicioService.saveServicio(servicio);
+            servicioRepository.save(servicio);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
             headers.add("Location",uriBuilder.path(a.value()[0]+"/"+servicio.getId().toString()).build().toUriString());
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
@@ -68,7 +68,7 @@ privileged aspect ServicioController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             for (Servicio servicio: Servicio.fromJsonArrayToServicios(json)) {
-                servicioService.saveServicio(servicio);
+                servicioRepository.save(servicio);
             }
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ privileged aspect ServicioController_Roo_Controller_Json {
         try {
             Servicio servicio = Servicio.fromJsonToServicio(json);
             servicio.setId(id);
-            if (servicioService.updateServicio(servicio) == null) {
+            if (servicioRepository.save(servicio) == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<String>(headers, HttpStatus.OK);
@@ -97,11 +97,11 @@ privileged aspect ServicioController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-            Servicio servicio = servicioService.findServicio(id);
+            Servicio servicio = servicioRepository.findOne(id);
             if (servicio == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
-            servicioService.deleteServicio(servicio);
+            servicioRepository.delete(servicio);
             return new ResponseEntity<String>(headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);

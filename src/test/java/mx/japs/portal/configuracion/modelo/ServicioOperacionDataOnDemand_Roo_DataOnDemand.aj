@@ -14,7 +14,6 @@ import mx.japs.portal.configuracion.modelo.ServicioDataOnDemand;
 import mx.japs.portal.configuracion.modelo.ServicioOperacion;
 import mx.japs.portal.configuracion.modelo.ServicioOperacionDataOnDemand;
 import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
-import mx.japs.portal.configuracion.servicio.ServicioOperacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +27,6 @@ privileged aspect ServicioOperacionDataOnDemand_Roo_DataOnDemand {
     
     @Autowired
     ServicioDataOnDemand ServicioOperacionDataOnDemand.servicioDataOnDemand;
-    
-    @Autowired
-    ServicioOperacionService ServicioOperacionDataOnDemand.servicioOperacionService;
     
     @Autowired
     ServicioOperacionRepository ServicioOperacionDataOnDemand.servicioOperacionRepository;
@@ -68,14 +64,14 @@ privileged aspect ServicioOperacionDataOnDemand_Roo_DataOnDemand {
         }
         ServicioOperacion obj = data.get(index);
         Long id = obj.getId();
-        return servicioOperacionService.findServicioOperacion(id);
+        return servicioOperacionRepository.findOne(id);
     }
     
     public ServicioOperacion ServicioOperacionDataOnDemand.getRandomServicioOperacion() {
         init();
         ServicioOperacion obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return servicioOperacionService.findServicioOperacion(id);
+        return servicioOperacionRepository.findOne(id);
     }
     
     public boolean ServicioOperacionDataOnDemand.modifyServicioOperacion(ServicioOperacion obj) {
@@ -85,7 +81,7 @@ privileged aspect ServicioOperacionDataOnDemand_Roo_DataOnDemand {
     public void ServicioOperacionDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = servicioOperacionService.findServicioOperacionEntries(from, to);
+        data = servicioOperacionRepository.findAll(new org.springframework.data.domain.PageRequest(from / to, to)).getContent();
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'ServicioOperacion' illegally returned null");
         }
@@ -97,7 +93,7 @@ privileged aspect ServicioOperacionDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             ServicioOperacion obj = getNewTransientServicioOperacion(i);
             try {
-                servicioOperacionService.saveServicioOperacion(obj);
+                servicioOperacionRepository.save(obj);
             } catch (final ConstraintViolationException e) {
                 final StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {

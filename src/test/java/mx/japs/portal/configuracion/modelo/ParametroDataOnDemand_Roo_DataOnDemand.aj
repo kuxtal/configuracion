@@ -14,7 +14,6 @@ import mx.japs.portal.configuracion.modelo.Parametro;
 import mx.japs.portal.configuracion.modelo.ParametroDataOnDemand;
 import mx.japs.portal.configuracion.modelo.PortalDataOnDemand;
 import mx.japs.portal.configuracion.repositorio.ParametroRepository;
-import mx.japs.portal.configuracion.servicio.ParametroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +27,6 @@ privileged aspect ParametroDataOnDemand_Roo_DataOnDemand {
     
     @Autowired
     PortalDataOnDemand ParametroDataOnDemand.portalDataOnDemand;
-    
-    @Autowired
-    ParametroService ParametroDataOnDemand.parametroService;
     
     @Autowired
     ParametroRepository ParametroDataOnDemand.parametroRepository;
@@ -74,14 +70,14 @@ privileged aspect ParametroDataOnDemand_Roo_DataOnDemand {
         }
         Parametro obj = data.get(index);
         Long id = obj.getId();
-        return parametroService.findParametro(id);
+        return parametroRepository.findOne(id);
     }
     
     public Parametro ParametroDataOnDemand.getRandomParametro() {
         init();
         Parametro obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return parametroService.findParametro(id);
+        return parametroRepository.findOne(id);
     }
     
     public boolean ParametroDataOnDemand.modifyParametro(Parametro obj) {
@@ -91,7 +87,7 @@ privileged aspect ParametroDataOnDemand_Roo_DataOnDemand {
     public void ParametroDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = parametroService.findParametroEntries(from, to);
+        data = parametroRepository.findAll(new org.springframework.data.domain.PageRequest(from / to, to)).getContent();
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'Parametro' illegally returned null");
         }
@@ -103,7 +99,7 @@ privileged aspect ParametroDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             Parametro obj = getNewTransientParametro(i);
             try {
-                parametroService.saveParametro(obj);
+                parametroRepository.save(obj);
             } catch (final ConstraintViolationException e) {
                 final StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {

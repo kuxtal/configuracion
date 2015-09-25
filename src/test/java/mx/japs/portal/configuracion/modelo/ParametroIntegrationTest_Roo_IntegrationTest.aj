@@ -10,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.ParametroDataOnDemand;
 import mx.japs.portal.configuracion.modelo.ParametroIntegrationTest;
 import mx.japs.portal.configuracion.repositorio.ParametroRepository;
-import mx.japs.portal.configuracion.servicio.ParametroService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,47 +30,44 @@ privileged aspect ParametroIntegrationTest_Roo_IntegrationTest {
     ParametroDataOnDemand ParametroIntegrationTest.dod;
     
     @Autowired
-    ParametroService ParametroIntegrationTest.parametroService;
-    
-    @Autowired
     ParametroRepository ParametroIntegrationTest.parametroRepository;
     
     @Test
-    public void ParametroIntegrationTest.testCountAllParametroes() {
+    public void ParametroIntegrationTest.testCount() {
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", dod.getRandomParametro());
-        long count = parametroService.countAllParametroes();
+        long count = parametroRepository.count();
         Assert.assertTrue("Counter for 'Parametro' incorrectly reported there were no entries", count > 0);
     }
     
     @Test
-    public void ParametroIntegrationTest.testFindParametro() {
+    public void ParametroIntegrationTest.testFind() {
         Parametro obj = dod.getRandomParametro();
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Parametro' failed to provide an identifier", id);
-        obj = parametroService.findParametro(id);
+        obj = parametroRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Parametro' illegally returned null for id '" + id + "'", obj);
         Assert.assertEquals("Find method for 'Parametro' returned the incorrect identifier", id, obj.getId());
     }
     
     @Test
-    public void ParametroIntegrationTest.testFindAllParametroes() {
+    public void ParametroIntegrationTest.testFindAll() {
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", dod.getRandomParametro());
-        long count = parametroService.countAllParametroes();
+        long count = parametroRepository.count();
         Assert.assertTrue("Too expensive to perform a find all test for 'Parametro', as there are " + count + " entries; set the findAllMaximum to exceed this value or set findAll=false on the integration test annotation to disable the test", count < 250);
-        List<Parametro> result = parametroService.findAllParametroes();
+        List<Parametro> result = parametroRepository.findAll();
         Assert.assertNotNull("Find all method for 'Parametro' illegally returned null", result);
         Assert.assertTrue("Find all method for 'Parametro' failed to return any data", result.size() > 0);
     }
     
     @Test
-    public void ParametroIntegrationTest.testFindParametroEntries() {
+    public void ParametroIntegrationTest.testFindEntries() {
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", dod.getRandomParametro());
-        long count = parametroService.countAllParametroes();
+        long count = parametroRepository.count();
         if (count > 20) count = 20;
         int firstResult = 0;
         int maxResults = (int) count;
-        List<Parametro> result = parametroService.findParametroEntries(firstResult, maxResults);
+        List<Parametro> result = parametroRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / maxResults, maxResults)).getContent();
         Assert.assertNotNull("Find entries method for 'Parametro' illegally returned null", result);
         Assert.assertEquals("Find entries method for 'Parametro' returned an incorrect number of entries", count, result.size());
     }
@@ -82,7 +78,7 @@ privileged aspect ParametroIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Parametro' failed to provide an identifier", id);
-        obj = parametroService.findParametro(id);
+        obj = parametroRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Parametro' illegally returned null for id '" + id + "'", obj);
         boolean modified =  dod.modifyParametro(obj);
         Integer currentVersion = obj.getVersion();
@@ -91,28 +87,28 @@ privileged aspect ParametroIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ParametroIntegrationTest.testUpdateParametroUpdate() {
+    public void ParametroIntegrationTest.testSaveUpdate() {
         Parametro obj = dod.getRandomParametro();
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Parametro' failed to provide an identifier", id);
-        obj = parametroService.findParametro(id);
+        obj = parametroRepository.findOne(id);
         boolean modified =  dod.modifyParametro(obj);
         Integer currentVersion = obj.getVersion();
-        Parametro merged = parametroService.updateParametro(obj);
+        Parametro merged = parametroRepository.save(obj);
         parametroRepository.flush();
         Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
         Assert.assertTrue("Version for 'Parametro' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void ParametroIntegrationTest.testSaveParametro() {
+    public void ParametroIntegrationTest.testSave() {
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", dod.getRandomParametro());
         Parametro obj = dod.getNewTransientParametro(Integer.MAX_VALUE);
         Assert.assertNotNull("Data on demand for 'Parametro' failed to provide a new transient entity", obj);
         Assert.assertNull("Expected 'Parametro' identifier to be null", obj.getId());
         try {
-            parametroService.saveParametro(obj);
+            parametroRepository.save(obj);
         } catch (final ConstraintViolationException e) {
             final StringBuilder msg = new StringBuilder();
             for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
@@ -126,15 +122,15 @@ privileged aspect ParametroIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ParametroIntegrationTest.testDeleteParametro() {
+    public void ParametroIntegrationTest.testDelete() {
         Parametro obj = dod.getRandomParametro();
         Assert.assertNotNull("Data on demand for 'Parametro' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Parametro' failed to provide an identifier", id);
-        obj = parametroService.findParametro(id);
-        parametroService.deleteParametro(obj);
+        obj = parametroRepository.findOne(id);
+        parametroRepository.delete(obj);
         parametroRepository.flush();
-        Assert.assertNull("Failed to remove 'Parametro' with identifier '" + id + "'", parametroService.findParametro(id));
+        Assert.assertNull("Failed to remove 'Parametro' with identifier '" + id + "'", parametroRepository.findOne(id));
     }
     
 }

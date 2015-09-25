@@ -24,7 +24,7 @@ privileged aspect PortalController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            Portal portal = portalService.findPortal(id);
+            Portal portal = portalRepository.findOne(id);
             if (portal == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
@@ -40,7 +40,7 @@ privileged aspect PortalController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            List<Portal> result = portalService.findAllPortals();
+            List<Portal> result = portalRepository.findAll();
             return new ResponseEntity<String>(Portal.toJsonArray(result), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,7 +53,7 @@ privileged aspect PortalController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             Portal portal = Portal.fromJsonToPortal(json);
-            portalService.savePortal(portal);
+            portalRepository.save(portal);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
             headers.add("Location",uriBuilder.path(a.value()[0]+"/"+portal.getId().toString()).build().toUriString());
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
@@ -68,7 +68,7 @@ privileged aspect PortalController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             for (Portal portal: Portal.fromJsonArrayToPortals(json)) {
-                portalService.savePortal(portal);
+                portalRepository.save(portal);
             }
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ privileged aspect PortalController_Roo_Controller_Json {
         try {
             Portal portal = Portal.fromJsonToPortal(json);
             portal.setId(id);
-            if (portalService.updatePortal(portal) == null) {
+            if (portalRepository.save(portal) == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<String>(headers, HttpStatus.OK);
@@ -97,11 +97,11 @@ privileged aspect PortalController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-            Portal portal = portalService.findPortal(id);
+            Portal portal = portalRepository.findOne(id);
             if (portal == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
-            portalService.deletePortal(portal);
+            portalRepository.delete(portal);
             return new ResponseEntity<String>(headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);

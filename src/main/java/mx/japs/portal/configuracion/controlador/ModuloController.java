@@ -30,7 +30,7 @@ import org.springframework.roo.addon.web.mvc.controller.json.RooWebJson;
 @RooWebScaffold(path = "moduloes", formBackingObject = Modulo.class)
 @RooWebJson(jsonObject = Modulo.class)
 public class ModuloController {
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@RequestMapping(headers = "Accept=application/json", value = "/menuJson", method = RequestMethod.GET)
 	@ResponseBody
@@ -42,7 +42,7 @@ public class ModuloController {
 	    headers.add("Content-Type", "application/json; charset=utf-8");
 	    
 	    try {
-	    	Portal portal = portalService.findPortal(idPortal);
+	    	Portal portal = portalRepository.findOne(idPortal);
 	    	
 	    	List<Modulo> modulos = new ArrayList(portal.getModulos());
 	    	logger.info("listaModulos.size : {}", modulos.size());

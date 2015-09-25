@@ -24,7 +24,7 @@ privileged aspect ModuloController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            Modulo modulo = moduloService.findModulo(id);
+            Modulo modulo = moduloRepository.findOne(id);
             if (modulo == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
@@ -40,7 +40,7 @@ privileged aspect ModuloController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
-            List<Modulo> result = moduloService.findAllModuloes();
+            List<Modulo> result = moduloRepository.findAll();
             return new ResponseEntity<String>(Modulo.toJsonArray(result), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,7 +53,7 @@ privileged aspect ModuloController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             Modulo modulo = Modulo.fromJsonToModulo(json);
-            moduloService.saveModulo(modulo);
+            moduloRepository.save(modulo);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
             headers.add("Location",uriBuilder.path(a.value()[0]+"/"+modulo.getId().toString()).build().toUriString());
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
@@ -68,7 +68,7 @@ privileged aspect ModuloController_Roo_Controller_Json {
         headers.add("Content-Type", "application/json");
         try {
             for (Modulo modulo: Modulo.fromJsonArrayToModuloes(json)) {
-                moduloService.saveModulo(modulo);
+                moduloRepository.save(modulo);
             }
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -83,12 +83,12 @@ privileged aspect ModuloController_Roo_Controller_Json {
         try {
             Modulo modulo = Modulo.fromJsonToModulo(json);
             modulo.setId(id);
-            if (moduloService.updateModulo(modulo) == null) {
+            if (moduloRepository.save(modulo) == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<String>(headers, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>("{\"ERROR\":\""+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -97,11 +97,11 @@ privileged aspect ModuloController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-            Modulo modulo = moduloService.findModulo(id);
+            Modulo modulo = moduloRepository.findOne(id);
             if (modulo == null) {
                 return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
             }
-            moduloService.deleteModulo(modulo);
+            moduloRepository.delete(modulo);
             return new ResponseEntity<String>(headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -10,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.ModuloDataOnDemand;
 import mx.japs.portal.configuracion.modelo.ModuloIntegrationTest;
 import mx.japs.portal.configuracion.repositorio.ModuloRepository;
-import mx.japs.portal.configuracion.servicio.ModuloService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,47 +30,44 @@ privileged aspect ModuloIntegrationTest_Roo_IntegrationTest {
     ModuloDataOnDemand ModuloIntegrationTest.dod;
     
     @Autowired
-    ModuloService ModuloIntegrationTest.moduloService;
-    
-    @Autowired
     ModuloRepository ModuloIntegrationTest.moduloRepository;
     
     @Test
-    public void ModuloIntegrationTest.testCountAllModuloes() {
+    public void ModuloIntegrationTest.testCount() {
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", dod.getRandomModulo());
-        long count = moduloService.countAllModuloes();
+        long count = moduloRepository.count();
         Assert.assertTrue("Counter for 'Modulo' incorrectly reported there were no entries", count > 0);
     }
     
     @Test
-    public void ModuloIntegrationTest.testFindModulo() {
+    public void ModuloIntegrationTest.testFind() {
         Modulo obj = dod.getRandomModulo();
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Modulo' failed to provide an identifier", id);
-        obj = moduloService.findModulo(id);
+        obj = moduloRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Modulo' illegally returned null for id '" + id + "'", obj);
         Assert.assertEquals("Find method for 'Modulo' returned the incorrect identifier", id, obj.getId());
     }
     
     @Test
-    public void ModuloIntegrationTest.testFindAllModuloes() {
+    public void ModuloIntegrationTest.testFindAll() {
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", dod.getRandomModulo());
-        long count = moduloService.countAllModuloes();
+        long count = moduloRepository.count();
         Assert.assertTrue("Too expensive to perform a find all test for 'Modulo', as there are " + count + " entries; set the findAllMaximum to exceed this value or set findAll=false on the integration test annotation to disable the test", count < 250);
-        List<Modulo> result = moduloService.findAllModuloes();
+        List<Modulo> result = moduloRepository.findAll();
         Assert.assertNotNull("Find all method for 'Modulo' illegally returned null", result);
         Assert.assertTrue("Find all method for 'Modulo' failed to return any data", result.size() > 0);
     }
     
     @Test
-    public void ModuloIntegrationTest.testFindModuloEntries() {
+    public void ModuloIntegrationTest.testFindEntries() {
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", dod.getRandomModulo());
-        long count = moduloService.countAllModuloes();
+        long count = moduloRepository.count();
         if (count > 20) count = 20;
         int firstResult = 0;
         int maxResults = (int) count;
-        List<Modulo> result = moduloService.findModuloEntries(firstResult, maxResults);
+        List<Modulo> result = moduloRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / maxResults, maxResults)).getContent();
         Assert.assertNotNull("Find entries method for 'Modulo' illegally returned null", result);
         Assert.assertEquals("Find entries method for 'Modulo' returned an incorrect number of entries", count, result.size());
     }
@@ -82,7 +78,7 @@ privileged aspect ModuloIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Modulo' failed to provide an identifier", id);
-        obj = moduloService.findModulo(id);
+        obj = moduloRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Modulo' illegally returned null for id '" + id + "'", obj);
         boolean modified =  dod.modifyModulo(obj);
         Integer currentVersion = obj.getVersion();
@@ -91,28 +87,28 @@ privileged aspect ModuloIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ModuloIntegrationTest.testUpdateModuloUpdate() {
+    public void ModuloIntegrationTest.testSaveUpdate() {
         Modulo obj = dod.getRandomModulo();
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Modulo' failed to provide an identifier", id);
-        obj = moduloService.findModulo(id);
+        obj = moduloRepository.findOne(id);
         boolean modified =  dod.modifyModulo(obj);
         Integer currentVersion = obj.getVersion();
-        Modulo merged = moduloService.updateModulo(obj);
+        Modulo merged = moduloRepository.save(obj);
         moduloRepository.flush();
         Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
         Assert.assertTrue("Version for 'Modulo' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void ModuloIntegrationTest.testSaveModulo() {
+    public void ModuloIntegrationTest.testSave() {
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", dod.getRandomModulo());
         Modulo obj = dod.getNewTransientModulo(Integer.MAX_VALUE);
         Assert.assertNotNull("Data on demand for 'Modulo' failed to provide a new transient entity", obj);
         Assert.assertNull("Expected 'Modulo' identifier to be null", obj.getId());
         try {
-            moduloService.saveModulo(obj);
+            moduloRepository.save(obj);
         } catch (final ConstraintViolationException e) {
             final StringBuilder msg = new StringBuilder();
             for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
@@ -126,15 +122,15 @@ privileged aspect ModuloIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ModuloIntegrationTest.testDeleteModulo() {
+    public void ModuloIntegrationTest.testDelete() {
         Modulo obj = dod.getRandomModulo();
         Assert.assertNotNull("Data on demand for 'Modulo' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Modulo' failed to provide an identifier", id);
-        obj = moduloService.findModulo(id);
-        moduloService.deleteModulo(obj);
+        obj = moduloRepository.findOne(id);
+        moduloRepository.delete(obj);
         moduloRepository.flush();
-        Assert.assertNull("Failed to remove 'Modulo' with identifier '" + id + "'", moduloService.findModulo(id));
+        Assert.assertNull("Failed to remove 'Modulo' with identifier '" + id + "'", moduloRepository.findOne(id));
     }
     
 }

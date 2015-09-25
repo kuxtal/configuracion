@@ -10,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.ServicioDataOnDemand;
 import mx.japs.portal.configuracion.modelo.ServicioIntegrationTest;
 import mx.japs.portal.configuracion.repositorio.ServicioRepository;
-import mx.japs.portal.configuracion.servicio.ServicioService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,47 +30,44 @@ privileged aspect ServicioIntegrationTest_Roo_IntegrationTest {
     ServicioDataOnDemand ServicioIntegrationTest.dod;
     
     @Autowired
-    ServicioService ServicioIntegrationTest.servicioService;
-    
-    @Autowired
     ServicioRepository ServicioIntegrationTest.servicioRepository;
     
     @Test
-    public void ServicioIntegrationTest.testCountAllServicios() {
+    public void ServicioIntegrationTest.testCount() {
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", dod.getRandomServicio());
-        long count = servicioService.countAllServicios();
+        long count = servicioRepository.count();
         Assert.assertTrue("Counter for 'Servicio' incorrectly reported there were no entries", count > 0);
     }
     
     @Test
-    public void ServicioIntegrationTest.testFindServicio() {
+    public void ServicioIntegrationTest.testFind() {
         Servicio obj = dod.getRandomServicio();
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Servicio' failed to provide an identifier", id);
-        obj = servicioService.findServicio(id);
+        obj = servicioRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Servicio' illegally returned null for id '" + id + "'", obj);
         Assert.assertEquals("Find method for 'Servicio' returned the incorrect identifier", id, obj.getId());
     }
     
     @Test
-    public void ServicioIntegrationTest.testFindAllServicios() {
+    public void ServicioIntegrationTest.testFindAll() {
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", dod.getRandomServicio());
-        long count = servicioService.countAllServicios();
+        long count = servicioRepository.count();
         Assert.assertTrue("Too expensive to perform a find all test for 'Servicio', as there are " + count + " entries; set the findAllMaximum to exceed this value or set findAll=false on the integration test annotation to disable the test", count < 250);
-        List<Servicio> result = servicioService.findAllServicios();
+        List<Servicio> result = servicioRepository.findAll();
         Assert.assertNotNull("Find all method for 'Servicio' illegally returned null", result);
         Assert.assertTrue("Find all method for 'Servicio' failed to return any data", result.size() > 0);
     }
     
     @Test
-    public void ServicioIntegrationTest.testFindServicioEntries() {
+    public void ServicioIntegrationTest.testFindEntries() {
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", dod.getRandomServicio());
-        long count = servicioService.countAllServicios();
+        long count = servicioRepository.count();
         if (count > 20) count = 20;
         int firstResult = 0;
         int maxResults = (int) count;
-        List<Servicio> result = servicioService.findServicioEntries(firstResult, maxResults);
+        List<Servicio> result = servicioRepository.findAll(new org.springframework.data.domain.PageRequest(firstResult / maxResults, maxResults)).getContent();
         Assert.assertNotNull("Find entries method for 'Servicio' illegally returned null", result);
         Assert.assertEquals("Find entries method for 'Servicio' returned an incorrect number of entries", count, result.size());
     }
@@ -82,7 +78,7 @@ privileged aspect ServicioIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Servicio' failed to provide an identifier", id);
-        obj = servicioService.findServicio(id);
+        obj = servicioRepository.findOne(id);
         Assert.assertNotNull("Find method for 'Servicio' illegally returned null for id '" + id + "'", obj);
         boolean modified =  dod.modifyServicio(obj);
         Integer currentVersion = obj.getVersion();
@@ -91,28 +87,28 @@ privileged aspect ServicioIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ServicioIntegrationTest.testUpdateServicioUpdate() {
+    public void ServicioIntegrationTest.testSaveUpdate() {
         Servicio obj = dod.getRandomServicio();
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Servicio' failed to provide an identifier", id);
-        obj = servicioService.findServicio(id);
+        obj = servicioRepository.findOne(id);
         boolean modified =  dod.modifyServicio(obj);
         Integer currentVersion = obj.getVersion();
-        Servicio merged = servicioService.updateServicio(obj);
+        Servicio merged = servicioRepository.save(obj);
         servicioRepository.flush();
         Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
         Assert.assertTrue("Version for 'Servicio' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void ServicioIntegrationTest.testSaveServicio() {
+    public void ServicioIntegrationTest.testSave() {
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", dod.getRandomServicio());
         Servicio obj = dod.getNewTransientServicio(Integer.MAX_VALUE);
         Assert.assertNotNull("Data on demand for 'Servicio' failed to provide a new transient entity", obj);
         Assert.assertNull("Expected 'Servicio' identifier to be null", obj.getId());
         try {
-            servicioService.saveServicio(obj);
+            servicioRepository.save(obj);
         } catch (final ConstraintViolationException e) {
             final StringBuilder msg = new StringBuilder();
             for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
@@ -126,15 +122,15 @@ privileged aspect ServicioIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
-    public void ServicioIntegrationTest.testDeleteServicio() {
+    public void ServicioIntegrationTest.testDelete() {
         Servicio obj = dod.getRandomServicio();
         Assert.assertNotNull("Data on demand for 'Servicio' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Servicio' failed to provide an identifier", id);
-        obj = servicioService.findServicio(id);
-        servicioService.deleteServicio(obj);
+        obj = servicioRepository.findOne(id);
+        servicioRepository.delete(obj);
         servicioRepository.flush();
-        Assert.assertNull("Failed to remove 'Servicio' with identifier '" + id + "'", servicioService.findServicio(id));
+        Assert.assertNull("Failed to remove 'Servicio' with identifier '" + id + "'", servicioRepository.findOne(id));
     }
     
 }

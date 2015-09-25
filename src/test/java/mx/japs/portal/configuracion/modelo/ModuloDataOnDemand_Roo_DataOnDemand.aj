@@ -14,7 +14,6 @@ import mx.japs.portal.configuracion.modelo.Modulo;
 import mx.japs.portal.configuracion.modelo.ModuloDataOnDemand;
 import mx.japs.portal.configuracion.modelo.PortalDataOnDemand;
 import mx.japs.portal.configuracion.repositorio.ModuloRepository;
-import mx.japs.portal.configuracion.servicio.ModuloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +27,6 @@ privileged aspect ModuloDataOnDemand_Roo_DataOnDemand {
     
     @Autowired
     PortalDataOnDemand ModuloDataOnDemand.portalDataOnDemand;
-    
-    @Autowired
-    ModuloService ModuloDataOnDemand.moduloService;
     
     @Autowired
     ModuloRepository ModuloDataOnDemand.moduloRepository;
@@ -68,14 +64,14 @@ privileged aspect ModuloDataOnDemand_Roo_DataOnDemand {
         }
         Modulo obj = data.get(index);
         Long id = obj.getId();
-        return moduloService.findModulo(id);
+        return moduloRepository.findOne(id);
     }
     
     public Modulo ModuloDataOnDemand.getRandomModulo() {
         init();
         Modulo obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return moduloService.findModulo(id);
+        return moduloRepository.findOne(id);
     }
     
     public boolean ModuloDataOnDemand.modifyModulo(Modulo obj) {
@@ -85,7 +81,7 @@ privileged aspect ModuloDataOnDemand_Roo_DataOnDemand {
     public void ModuloDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = moduloService.findModuloEntries(from, to);
+        data = moduloRepository.findAll(new org.springframework.data.domain.PageRequest(from / to, to)).getContent();
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'Modulo' illegally returned null");
         }
@@ -97,7 +93,7 @@ privileged aspect ModuloDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             Modulo obj = getNewTransientModulo(i);
             try {
-                moduloService.saveModulo(obj);
+                moduloRepository.save(obj);
             } catch (final ConstraintViolationException e) {
                 final StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
