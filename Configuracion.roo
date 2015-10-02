@@ -11,8 +11,9 @@ entity jpa --testAutomatically --equals --serializable --activeRecord false --ta
 entity jpa --testAutomatically --equals --serializable --activeRecord false --table PARAMETRO --class ~.modelo.Parametro
 entity jpa --testAutomatically --equals --serializable --activeRecord false --table MODULO --class ~.modelo.Modulo
 entity jpa --testAutomatically --equals --serializable --activeRecord false --table MENU_OPCION --class ~.modelo.MenuOpcion
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table PERFIL --class ~.modelo.Perfil
 entity jpa --testAutomatically --equals --serializable --activeRecord false --table SERVICIO --class ~.modelo.Servicio
-entity jpa --testAutomatically --equals --serializable --activeRecord false --table SERVICIO_OPERACION --class ~.modelo.ServicioOperacion
+entity jpa --testAutomatically --equals --serializable --activeRecord false --table OPERACION --class ~.modelo.Operacion
 
 
 // Attributes
@@ -20,10 +21,8 @@ entity jpa --testAutomatically --equals --serializable --activeRecord false --ta
 field string --fieldName nombre --class ~.modelo.Portal
 field string --fieldName descripcion --class ~.modelo.Portal
 field string --fieldName url --class ~.modelo.Portal
-field string --fieldName api_url --class ~.modelo.Portal
 constructor --class ~.modelo.Portal --fields "nombre descripcion"
 constructor --class ~.modelo.Portal --fields "nombre descripcion url"
-constructor --class ~.modelo.Portal --fields "nombre descripcion url api_url"
 // Entidad Parametro
 field string --fieldName grupo --class ~.modelo.Parametro
 field string --fieldName nombre --class ~.modelo.Parametro
@@ -39,21 +38,26 @@ constructor --class ~.modelo.Modulo --fields "nombre descripcion url"
 // Entidad MenuOpcion
 field string --fieldName nombre --class ~.modelo.MenuOpcion
 field string --fieldName texto --class ~.modelo.MenuOpcion
-field string --fieldName url --class ~.modelo.MenuOpcion
-field number --fieldName orden --class ~.modelo.MenuOpcion
-constructor --class ~.modelo.MenuOpcion --fields "nombre texto url"
+field number --fieldName orden --type java.lang.Integer --class ~.modelo.MenuOpcion
+constructor --class ~.modelo.MenuOpcion --fields "nombre texto"
+constructor --class ~.modelo.MenuOpcion --fields "nombre texto orden"
+// Entidad Perfil
+field string --fieldName nombre --class ~.modelo.Perfil
+field string --fieldName descripcion --class ~.modelo.Perfil
+constructor --class ~.modelo.Perfil --fields "nombre descripcion"
+constructor --class ~.modelo.Perfil --fields "nombre descripcion url"
 // Entidad Servicio
 field string --fieldName nombre --class ~.modelo.Servicio
 field string --fieldName descripcion --class ~.modelo.Servicio
 field string --fieldName url --class ~.modelo.Servicio
 constructor --class ~.modelo.Servicio --fields "nombre descripcion"
 constructor --class ~.modelo.Servicio --fields "nombre descripcion url"
-// Entidad ServicioOperacion
-field string --fieldName nombre --class ~.modelo.ServicioOperacion
-field string --fieldName descripcion --class ~.modelo.ServicioOperacion
-field string --fieldName url --class ~.modelo.ServicioOperacion
-constructor --class ~.modelo.ServicioOperacion --fields "nombre descripcion"
-constructor --class ~.modelo.ServicioOperacion --fields "nombre descripcion url"
+// Entidad Operacion
+field string --fieldName nombre --class ~.modelo.Operacion
+field string --fieldName descripcion --class ~.modelo.Operacion
+field string --fieldName url --class ~.modelo.Operacion
+constructor --class ~.modelo.Operacion --fields "nombre descripcion"
+constructor --class ~.modelo.Operacion --fields "nombre descripcion url"
 
 //
 // References
@@ -61,7 +65,8 @@ constructor --class ~.modelo.ServicioOperacion --fields "nombre descripcion url"
 field set --fieldName parametros --type ~.modelo.Parametro 			--cardinality ONE_TO_MANY --mappedBy portal --class ~.modelo.Portal
 field set --fieldName modulos --type ~.modelo.Modulo 				--cardinality ONE_TO_MANY --mappedBy portal --class ~.modelo.Portal
 field set --fieldName servicios --type ~.modelo.Servicio 			--cardinality ONE_TO_MANY --mappedBy portal --class ~.modelo.Portal
-field set --fieldName operaciones --type ~.modelo.ServicioOperacion --cardinality ONE_TO_MANY --mappedBy servicio --class ~.modelo.Servicio
+field set --fieldName perfiles --type ~.modelo.Perfil 				--cardinality ONE_TO_MANY --mappedBy portal --class ~.modelo.Portal
+field set --fieldName operaciones --type ~.modelo.Operacion 		--cardinality ONE_TO_MANY --mappedBy servicio --class ~.modelo.Servicio
 field set --fieldName opciones --type ~.modelo.MenuOpcion 			--cardinality ONE_TO_MANY --mappedBy modulo   --class ~.modelo.Modulo
 field set --fieldName opciones --type ~.modelo.MenuOpcion 			--cardinality ONE_TO_MANY --mappedBy opcionPadre --class ~.modelo.MenuOpcion
 
@@ -69,23 +74,28 @@ field set --fieldName opciones --type ~.modelo.MenuOpcion 			--cardinality ONE_T
 field reference --fieldName portal --type ~.modelo.Portal 	--cardinality MANY_TO_ONE --class ~.modelo.Parametro
 field reference --fieldName portal --type ~.modelo.Portal 	--cardinality MANY_TO_ONE --class ~.modelo.Modulo
 field reference --fieldName portal --type ~.modelo.Portal 	--cardinality MANY_TO_ONE --class ~.modelo.Servicio
+field reference --fieldName portal --type ~.modelo.Portal 	--cardinality MANY_TO_ONE --class ~.modelo.Perfil
 field reference --fieldName modulo --type ~.modelo.Modulo	--cardinality MANY_TO_ONE --class ~.modelo.MenuOpcion
 field reference --fieldName opcionPadre --type ~.modelo.MenuOpcion	--cardinality MANY_TO_ONE --class ~.modelo.MenuOpcion
-field reference --fieldName servicio --type ~.modelo.Servicio --cardinality MANY_TO_ONE --class ~.modelo.ServicioOperacion
+field reference --fieldName servicio --type ~.modelo.Servicio --cardinality MANY_TO_ONE --class ~.modelo.Operacion
+
+// ONE_TO_ONE
+field reference --fieldName operacion --type ~.modelo.Operacion --cardinality ONE_TO_ONE --class ~.modelo.MenuOpcion
+
+// MANY_TO_MANY
+field set --fieldName perfiles --type ~.modelo.Perfil 			--cardinality MANY_TO_MANY --mappedBy operaciones	--class ~.modelo.Operacion
+field set --fieldName operaciones --type ~.modelo.Operacion		--cardinality MANY_TO_MANY							--class ~.modelo.Perfil
 
 //
 // Repositorios
 repository jpa --interface ~.repositorio.PortalRepository --entity ~.modelo.Portal
 repository jpa --interface ~.repositorio.ParametroRepository --entity ~.modelo.Parametro
 repository jpa --interface ~.repositorio.ModuloRepository --entity ~.modelo.Modulo
+repository jpa --interface ~.repositorio.PerfilRepository --entity ~.modelo.Perfil
 repository jpa --interface ~.repositorio.MenuOpcionRepository --entity ~.modelo.MenuOpcion
 repository jpa --interface ~.repositorio.ServicioRepository --entity ~.modelo.Servicio
-repository jpa --interface ~.repositorio.ServicioOperacionRepository --entity ~.modelo.ServicioOperacion
+repository jpa --interface ~.repositorio.OperacionRepository --entity ~.modelo.Operacion
 
-
-//
-// Servicios
-service all --interfacePackage ~.servicio --useXmlConfiguration false 
 
 //
 // Controladores
