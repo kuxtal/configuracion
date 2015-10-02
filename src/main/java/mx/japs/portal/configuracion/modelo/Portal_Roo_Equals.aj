@@ -17,11 +17,11 @@ privileged aspect Portal_Roo_Equals {
             return true;
         }
         Portal rhs = (Portal) obj;
-        return new EqualsBuilder().append(api_url, rhs.api_url).append(descripcion, rhs.descripcion).append(id, rhs.id).append(nombre, rhs.nombre).append(url, rhs.url).isEquals();
+        return new EqualsBuilder().append(descripcion, rhs.descripcion).append(id, rhs.id).append(nombre, rhs.nombre).append(url, rhs.url).isEquals();
     }
     
     public int Portal.hashCode() {
-        return new HashCodeBuilder().append(api_url).append(descripcion).append(id).append(nombre).append(url).toHashCode();
+        return new HashCodeBuilder().append(descripcion).append(id).append(nombre).append(url).toHashCode();
     }
     
 }

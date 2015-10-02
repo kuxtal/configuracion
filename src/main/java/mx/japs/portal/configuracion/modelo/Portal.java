@@ -30,10 +30,6 @@ public class Portal {
      */
     private String url;
 
-    /**
-     */
-    private String api_url;
-
     public Portal(String nombre, String descripcion) {
         super();
         this.nombre = nombre;
@@ -45,14 +41,6 @@ public class Portal {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.url = url;
-    }
-
-    public Portal(String nombre, String descripcion, String url, String api_url) {
-        super();
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.url = url;
-        this.api_url = api_url;
     }
 
     /**
@@ -69,4 +57,9 @@ public class Portal {
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portal")
     private Set<Servicio> servicios = new HashSet<Servicio>();
+
+    /**
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "portal")
+    private Set<Perfil> perfiles = new HashSet<Perfil>();
 }

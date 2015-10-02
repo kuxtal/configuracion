@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_mx_japs_portal_configuracion_modelo_Operacion" items="${operacions}" z="ZJfieaNIDL2zlggl7eNRXtf6WN0=">
+        <table:table data="${operacions}" id="l_mx_japs_portal_configuracion_modelo_Operacion" path="/operacions" z="ZEWgeX41TuhBxk6gOPLI65JEXiw=">
+            <table:column id="c_mx_japs_portal_configuracion_modelo_Operacion_nombre" property="nombre" z="HHYw9xW+SlgF2wuSLMp+9BUnUs8="/>
+            <table:column id="c_mx_japs_portal_configuracion_modelo_Operacion_descripcion" property="descripcion" z="mBrQLDETdxzgTIxZZ9xYLtTCdyI="/>
+            <table:column id="c_mx_japs_portal_configuracion_modelo_Operacion_url" property="url" z="lE7dZ+10XHLf/4XoFFpv1en+/9Q="/>
+            <table:column id="c_mx_japs_portal_configuracion_modelo_Operacion_servicio" property="servicio" z="CrFi0epBHYojK9aNRQ95E4AkhoA="/>
+            <table:column id="c_mx_japs_portal_configuracion_modelo_Operacion_perfiles" property="perfiles" z="AN7ROqoy8Nm7Wta1Wjyu2RUdyU4="/>
+        </table:table>
+    </page:list>
+</div>

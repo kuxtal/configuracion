@@ -29,16 +29,10 @@ privileged aspect PortalDataOnDemand_Roo_DataOnDemand {
     
     public Portal PortalDataOnDemand.getNewTransientPortal(int index) {
         Portal obj = new Portal();
-        setApi_url(obj, index);
         setDescripcion(obj, index);
         setNombre(obj, index);
         setUrl(obj, index);
         return obj;
-    }
-    
-    public void PortalDataOnDemand.setApi_url(Portal obj, int index) {
-        String api_url = "api_url_" + index;
-        obj.setApi_url(api_url);
     }
     
     public void PortalDataOnDemand.setDescripcion(Portal obj, int index) {

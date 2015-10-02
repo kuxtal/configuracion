@@ -6,15 +6,17 @@ package mx.japs.portal.configuracion.controlador;
 import mx.japs.portal.configuracion.controlador.ApplicationConversionServiceFactoryBean;
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.Modulo;
+import mx.japs.portal.configuracion.modelo.Operacion;
 import mx.japs.portal.configuracion.modelo.Parametro;
+import mx.japs.portal.configuracion.modelo.Perfil;
 import mx.japs.portal.configuracion.modelo.Portal;
 import mx.japs.portal.configuracion.modelo.Servicio;
-import mx.japs.portal.configuracion.modelo.ServicioOperacion;
 import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
 import mx.japs.portal.configuracion.repositorio.ModuloRepository;
+import mx.japs.portal.configuracion.repositorio.OperacionRepository;
 import mx.japs.portal.configuracion.repositorio.ParametroRepository;
+import mx.japs.portal.configuracion.repositorio.PerfilRepository;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
-import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
 import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -32,7 +34,13 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     ModuloRepository ApplicationConversionServiceFactoryBean.moduloRepository;
     
     @Autowired
+    OperacionRepository ApplicationConversionServiceFactoryBean.operacionRepository;
+    
+    @Autowired
     ParametroRepository ApplicationConversionServiceFactoryBean.parametroRepository;
+    
+    @Autowired
+    PerfilRepository ApplicationConversionServiceFactoryBean.perfilRepository;
     
     @Autowired
     PortalRepository ApplicationConversionServiceFactoryBean.portalRepository;
@@ -40,13 +48,10 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     @Autowired
     ServicioRepository ApplicationConversionServiceFactoryBean.servicioRepository;
     
-    @Autowired
-    ServicioOperacionRepository ApplicationConversionServiceFactoryBean.servicioOperacionRepository;
-    
     public Converter<MenuOpcion, String> ApplicationConversionServiceFactoryBean.getMenuOpcionToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<mx.japs.portal.configuracion.modelo.MenuOpcion, java.lang.String>() {
             public String convert(MenuOpcion menuOpcion) {
-                return new StringBuilder().append(menuOpcion.getNombre()).append(' ').append(menuOpcion.getTexto()).append(' ').append(menuOpcion.getUrl()).toString();
+                return new StringBuilder().append(menuOpcion.getNombre()).append(' ').append(menuOpcion.getTexto()).append(' ').append(menuOpcion.getOrden()).toString();
             }
         };
     }
@@ -91,6 +96,30 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
+    public Converter<Operacion, String> ApplicationConversionServiceFactoryBean.getOperacionToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<mx.japs.portal.configuracion.modelo.Operacion, java.lang.String>() {
+            public String convert(Operacion operacion) {
+                return new StringBuilder().append(operacion.getNombre()).append(' ').append(operacion.getDescripcion()).append(' ').append(operacion.getUrl()).toString();
+            }
+        };
+    }
+    
+    public Converter<Long, Operacion> ApplicationConversionServiceFactoryBean.getIdToOperacionConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.Operacion>() {
+            public mx.japs.portal.configuracion.modelo.Operacion convert(java.lang.Long id) {
+                return operacionRepository.findOne(id);
+            }
+        };
+    }
+    
+    public Converter<String, Operacion> ApplicationConversionServiceFactoryBean.getStringToOperacionConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, mx.japs.portal.configuracion.modelo.Operacion>() {
+            public mx.japs.portal.configuracion.modelo.Operacion convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Operacion.class);
+            }
+        };
+    }
+    
     public Converter<Parametro, String> ApplicationConversionServiceFactoryBean.getParametroToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<mx.japs.portal.configuracion.modelo.Parametro, java.lang.String>() {
             public String convert(Parametro parametro) {
@@ -115,10 +144,34 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
+    public Converter<Perfil, String> ApplicationConversionServiceFactoryBean.getPerfilToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<mx.japs.portal.configuracion.modelo.Perfil, java.lang.String>() {
+            public String convert(Perfil perfil) {
+                return new StringBuilder().append(perfil.getNombre()).append(' ').append(perfil.getDescripcion()).toString();
+            }
+        };
+    }
+    
+    public Converter<Long, Perfil> ApplicationConversionServiceFactoryBean.getIdToPerfilConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.Perfil>() {
+            public mx.japs.portal.configuracion.modelo.Perfil convert(java.lang.Long id) {
+                return perfilRepository.findOne(id);
+            }
+        };
+    }
+    
+    public Converter<String, Perfil> ApplicationConversionServiceFactoryBean.getStringToPerfilConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, mx.japs.portal.configuracion.modelo.Perfil>() {
+            public mx.japs.portal.configuracion.modelo.Perfil convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Perfil.class);
+            }
+        };
+    }
+    
     public Converter<Portal, String> ApplicationConversionServiceFactoryBean.getPortalToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<mx.japs.portal.configuracion.modelo.Portal, java.lang.String>() {
             public String convert(Portal portal) {
-                return new StringBuilder().append(portal.getNombre()).append(' ').append(portal.getDescripcion()).append(' ').append(portal.getUrl()).append(' ').append(portal.getApi_url()).toString();
+                return new StringBuilder().append(portal.getNombre()).append(' ').append(portal.getDescripcion()).append(' ').append(portal.getUrl()).toString();
             }
         };
     }
@@ -163,30 +216,6 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
-    public Converter<ServicioOperacion, String> ApplicationConversionServiceFactoryBean.getServicioOperacionToStringConverter() {
-        return new org.springframework.core.convert.converter.Converter<mx.japs.portal.configuracion.modelo.ServicioOperacion, java.lang.String>() {
-            public String convert(ServicioOperacion servicioOperacion) {
-                return new StringBuilder().append(servicioOperacion.getNombre()).append(' ').append(servicioOperacion.getDescripcion()).append(' ').append(servicioOperacion.getUrl()).toString();
-            }
-        };
-    }
-    
-    public Converter<Long, ServicioOperacion> ApplicationConversionServiceFactoryBean.getIdToServicioOperacionConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.Long, mx.japs.portal.configuracion.modelo.ServicioOperacion>() {
-            public mx.japs.portal.configuracion.modelo.ServicioOperacion convert(java.lang.Long id) {
-                return servicioOperacionRepository.findOne(id);
-            }
-        };
-    }
-    
-    public Converter<String, ServicioOperacion> ApplicationConversionServiceFactoryBean.getStringToServicioOperacionConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.String, mx.japs.portal.configuracion.modelo.ServicioOperacion>() {
-            public mx.japs.portal.configuracion.modelo.ServicioOperacion convert(String id) {
-                return getObject().convert(getObject().convert(id, Long.class), ServicioOperacion.class);
-            }
-        };
-    }
-    
     public void ApplicationConversionServiceFactoryBean.installLabelConverters(FormatterRegistry registry) {
         registry.addConverter(getMenuOpcionToStringConverter());
         registry.addConverter(getIdToMenuOpcionConverter());
@@ -194,18 +223,21 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         registry.addConverter(getModuloToStringConverter());
         registry.addConverter(getIdToModuloConverter());
         registry.addConverter(getStringToModuloConverter());
+        registry.addConverter(getOperacionToStringConverter());
+        registry.addConverter(getIdToOperacionConverter());
+        registry.addConverter(getStringToOperacionConverter());
         registry.addConverter(getParametroToStringConverter());
         registry.addConverter(getIdToParametroConverter());
         registry.addConverter(getStringToParametroConverter());
+        registry.addConverter(getPerfilToStringConverter());
+        registry.addConverter(getIdToPerfilConverter());
+        registry.addConverter(getStringToPerfilConverter());
         registry.addConverter(getPortalToStringConverter());
         registry.addConverter(getIdToPortalConverter());
         registry.addConverter(getStringToPortalConverter());
         registry.addConverter(getServicioToStringConverter());
         registry.addConverter(getIdToServicioConverter());
         registry.addConverter(getStringToServicioConverter());
-        registry.addConverter(getServicioOperacionToStringConverter());
-        registry.addConverter(getIdToServicioOperacionConverter());
-        registry.addConverter(getStringToServicioOperacionConverter());
     }
     
     public void ApplicationConversionServiceFactoryBean.afterPropertiesSet() {

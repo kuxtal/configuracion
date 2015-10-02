@@ -7,10 +7,6 @@
             <menu:item id="i_servicio_new" messageCode="global_menu_new" url="/servicios?form" z="ZcD+IcvafBsgx0tkgA0q3ri2p/0="/>
             <menu:item id="i_servicio_list" messageCode="global_menu_list" url="/servicios?page=1&amp;size=${empty param.size ? 10 : param.size}" z="kletWUAURy0xmdNr3gkiFD22PjM="/>
         </menu:category>
-        <menu:category id="c_serviciooperacion" z="FA3/oIQnBcixq1pF7UEpoCJxQnA=">
-            <menu:item id="i_serviciooperacion_new" messageCode="global_menu_new" url="/serviciooperacions?form" z="995XqPG1N1UZFhgdwBMha4iarNI="/>
-            <menu:item id="i_serviciooperacion_list" messageCode="global_menu_list" url="/serviciooperacions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="/tOneQ0GCTrsHlkVQz7+9QPCey4="/>
-        </menu:category>
         <menu:category id="c_portal" z="hKQWz/HuLfqdz0aDg1ex8uBobtQ=">
             <menu:item id="i_portal_new" messageCode="global_menu_new" url="/portals?form" z="mz9+FQbeILgRoTfZ66UpG4rw+XE="/>
             <menu:item id="i_portal_list" messageCode="global_menu_list" url="/portals?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Gl1Ud+4CBxbTIt8fkDI5EwUdjRM="/>
@@ -26,6 +22,14 @@
         <menu:category id="c_modulo" z="ItqMDxreMHuBmRP1MXFXXymRG40=">
             <menu:item id="i_modulo_new" messageCode="global_menu_new" url="/moduloes?form" z="KUBjBrcgHwaKEblK2PR8WXH3OkM="/>
             <menu:item id="i_modulo_list" messageCode="global_menu_list" url="/moduloes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="+foTjCM0WWX74J036JzZdsjaoP4="/>
+        </menu:category>
+        <menu:category id="c_perfil" z="IXsqDjmAdFx8UDse6pIX4BWTzJI=">
+            <menu:item id="i_perfil_new" messageCode="global_menu_new" url="/perfils?form" z="o4iwt5RupWuivgX3bSp1Ge1LhlA="/>
+            <menu:item id="i_perfil_list" messageCode="global_menu_list" url="/perfils?page=1&amp;size=${empty param.size ? 10 : param.size}" z="9a6XPu7Dg4+ZnXkuIifSq+pUUuU="/>
+        </menu:category>
+        <menu:category id="c_operacion" z="M/DnapZYUVfH65qWUZTXJj1a0fY=">
+            <menu:item id="i_operacion_new" messageCode="global_menu_new" url="/operacions?form" z="B8uk2SYwzw9QeJ4IpbMjdrS/vLk="/>
+            <menu:item id="i_operacion_list" messageCode="global_menu_list" url="/operacions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Cdnkj1lmJL2acBAm41Bs6685gNc="/>
         </menu:category>
     </menu:menu>
 </div>

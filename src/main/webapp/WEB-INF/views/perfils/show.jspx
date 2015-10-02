@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_mx_japs_portal_configuracion_modelo_Perfil" object="${perfil}" path="/perfils" z="LXLA294s54t/Wa7r+jtui0LRq0Y=">
+        <field:display field="nombre" id="s_mx_japs_portal_configuracion_modelo_Perfil_nombre" object="${perfil}" z="5BOki+4OndQu3eJ33AhvS6+neEc="/>
+        <field:display field="descripcion" id="s_mx_japs_portal_configuracion_modelo_Perfil_descripcion" object="${perfil}" z="/9pdhZEi/U9ti5mf37TRYYDUEbY="/>
+        <field:display field="portal" id="s_mx_japs_portal_configuracion_modelo_Perfil_portal" object="${perfil}" z="1iu3wZKIv9doVkzvRVuvr4db7yg="/>
+        <field:display field="operaciones" id="s_mx_japs_portal_configuracion_modelo_Perfil_operaciones" object="${perfil}" z="IlkSFiC7mZjNKsd6gK3sAV6VnPU="/>
+    </page:show>
+</div>

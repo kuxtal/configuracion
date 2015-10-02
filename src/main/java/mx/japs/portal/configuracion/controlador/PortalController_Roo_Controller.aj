@@ -10,6 +10,7 @@ import mx.japs.portal.configuracion.controlador.PortalController;
 import mx.japs.portal.configuracion.modelo.Portal;
 import mx.japs.portal.configuracion.repositorio.ModuloRepository;
 import mx.japs.portal.configuracion.repositorio.ParametroRepository;
+import mx.japs.portal.configuracion.repositorio.PerfilRepository;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
 import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ privileged aspect PortalController_Roo_Controller {
     
     @Autowired
     ParametroRepository PortalController.parametroRepository;
+    
+    @Autowired
+    PerfilRepository PortalController.perfilRepository;
     
     @Autowired
     ServicioRepository PortalController.servicioRepository;
@@ -105,6 +109,7 @@ privileged aspect PortalController_Roo_Controller {
         uiModel.addAttribute("portal", portal);
         uiModel.addAttribute("moduloes", moduloRepository.findAll());
         uiModel.addAttribute("parametroes", parametroRepository.findAll());
+        uiModel.addAttribute("perfils", perfilRepository.findAll());
         uiModel.addAttribute("servicios", servicioRepository.findAll());
     }
     

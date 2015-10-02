@@ -17,11 +17,11 @@ privileged aspect MenuOpcion_Roo_Equals {
             return true;
         }
         MenuOpcion rhs = (MenuOpcion) obj;
-        return new EqualsBuilder().append(id, rhs.id).append(modulo, rhs.modulo).append(nombre, rhs.nombre).append(opcionPadre, rhs.opcionPadre).append(texto, rhs.texto).append(url, rhs.url).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(modulo, rhs.modulo).append(nombre, rhs.nombre).append(opcionPadre, rhs.opcionPadre).append(operacion, rhs.operacion).append(orden, rhs.orden).append(texto, rhs.texto).isEquals();
     }
     
     public int MenuOpcion.hashCode() {
-        return new HashCodeBuilder().append(id).append(modulo).append(nombre).append(opcionPadre).append(texto).append(url).toHashCode();
+        return new HashCodeBuilder().append(id).append(modulo).append(nombre).append(opcionPadre).append(operacion).append(orden).append(texto).toHashCode();
     }
     
 }

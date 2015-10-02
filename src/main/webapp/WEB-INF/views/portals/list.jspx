@@ -7,7 +7,6 @@
             <table:column id="c_mx_japs_portal_configuracion_modelo_Portal_nombre" property="nombre" z="p8ElG6yw9mKqF+izqfer1V5zAa4="/>
             <table:column id="c_mx_japs_portal_configuracion_modelo_Portal_descripcion" property="descripcion" z="BEE90AxmpTv2HtIp1rKvZhH5CTw="/>
             <table:column id="c_mx_japs_portal_configuracion_modelo_Portal_url" property="url" z="YJWnBPyIhF1MixyU4xAnj7WEcrE="/>
-            <table:column id="c_mx_japs_portal_configuracion_modelo_Portal_api_url" property="api_url" z="gToF0Ewv/cE23C8y/bE2S9YYgx0="/>
         </table:table>
     </page:list>
 </div>

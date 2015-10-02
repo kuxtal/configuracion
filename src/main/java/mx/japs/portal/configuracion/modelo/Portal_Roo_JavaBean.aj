@@ -6,6 +6,7 @@ package mx.japs.portal.configuracion.modelo;
 import java.util.Set;
 import mx.japs.portal.configuracion.modelo.Modulo;
 import mx.japs.portal.configuracion.modelo.Parametro;
+import mx.japs.portal.configuracion.modelo.Perfil;
 import mx.japs.portal.configuracion.modelo.Portal;
 import mx.japs.portal.configuracion.modelo.Servicio;
 
@@ -35,14 +36,6 @@ privileged aspect Portal_Roo_JavaBean {
         this.url = url;
     }
     
-    public String Portal.getApi_url() {
-        return this.api_url;
-    }
-    
-    public void Portal.setApi_url(String api_url) {
-        this.api_url = api_url;
-    }
-    
     public Set<Parametro> Portal.getParametros() {
         return this.parametros;
     }
@@ -65,6 +58,14 @@ privileged aspect Portal_Roo_JavaBean {
     
     public void Portal.setServicios(Set<Servicio> servicios) {
         this.servicios = servicios;
+    }
+    
+    public Set<Perfil> Portal.getPerfiles() {
+        return this.perfiles;
+    }
+    
+    public void Portal.setPerfiles(Set<Perfil> perfiles) {
+        this.perfiles = perfiles;
     }
     
 }

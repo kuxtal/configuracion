@@ -12,12 +12,12 @@ import mx.japs.portal.configuracion.modelo.Modulo;
 import mx.japs.portal.configuracion.modelo.Parametro;
 import mx.japs.portal.configuracion.modelo.Portal;
 import mx.japs.portal.configuracion.modelo.Servicio;
-import mx.japs.portal.configuracion.modelo.ServicioOperacion;
+import mx.japs.portal.configuracion.modelo.Operacion;
 import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
 import mx.japs.portal.configuracion.repositorio.ModuloRepository;
 import mx.japs.portal.configuracion.repositorio.ParametroRepository;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
-import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
+import mx.japs.portal.configuracion.repositorio.OperacionRepository;
 import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 
 @Component
@@ -31,7 +31,7 @@ public class Datos {
 	private ServicioRepository servicio_repository;
 
 	@Autowired
-	private ServicioOperacionRepository servicioOp_repository;
+	private OperacionRepository servicioOp_repository;
 	
 	@Autowired
 	private ParametroRepository param_repository;
@@ -49,7 +49,7 @@ public class Datos {
 		if (0 == portal_repository.count()) {
 			logger.info("No existe informacion en la Base de Datos");
 			
-			Portal portalConfiguracion = new Portal("Configuracion", "Portal de Configuracion", "/configuracion", "http://localhost\\:8080/roo_rest/");
+			Portal portalConfiguracion = new Portal("Configuracion", "Portal de Configuracion", "/configuracion");
 			portal_repository.save(portalConfiguracion);
 
 			Parametro param01 = new Parametro("configuracion", "IP_01", "localhost", "");
@@ -78,43 +78,43 @@ public class Datos {
 			servicioParametro = servicio_repository.save(servicioParametro);
 			
 			// Operaciones
-			ServicioOperacion operacionPortalList = new ServicioOperacion("Portal_list", "Controlador Portal Listar", "/");
+			Operacion operacionPortalList = new Operacion("Portal_list", "Controlador Portal Listar", "/");
 			operacionPortalList.setServicio(servicioPortal);
 			servicioOp_repository.save(operacionPortalList);
 			
-			ServicioOperacion operacionPortalShow = new ServicioOperacion("Portal_show", "Controlador Portal Registro", "/");
+			Operacion operacionPortalShow = new Operacion("Portal_show", "Controlador Portal Registro", "/");
 			operacionPortalShow.setServicio(servicioPortal);
 			servicioOp_repository.save(operacionPortalShow);
 			
-			ServicioOperacion operacionPortalUpdateForm = new ServicioOperacion("Portal_updateForm", "Controlador Update Form", "/");
+			Operacion operacionPortalUpdateForm = new Operacion("Portal_updateForm", "Controlador Update Form", "/");
 			operacionPortalUpdateForm.setServicio(servicioPortal);
 			servicioOp_repository.save(operacionPortalUpdateForm);
 			
-			ServicioOperacion operacionParametroList = new ServicioOperacion("Parametro_list", "Operacion Parametro Listar", "/");
+			Operacion operacionParametroList = new Operacion("Parametro_list", "Operacion Parametro Listar", "/");
 			operacionParametroList.setServicio(servicioParametro);
 			servicioOp_repository.save(operacionParametroList);
 			
-			ServicioOperacion operacionParametroShow = new ServicioOperacion("Parametro_show", "Operacion Parametro Registro", "/");
+			Operacion operacionParametroShow = new Operacion("Parametro_show", "Operacion Parametro Registro", "/");
 			operacionParametroShow.setServicio(servicioPortal);
 			servicioOp_repository.save(operacionParametroShow);
 			
-			ServicioOperacion operacionParametroUpdateForm = new ServicioOperacion("Parametro_updateForm", "Operacion Parametro Formulario Actualizar", "/");
+			Operacion operacionParametroUpdateForm = new Operacion("Parametro_updateForm", "Operacion Parametro Formulario Actualizar", "/");
 			operacionParametroUpdateForm.setServicio(servicioParametro);
 			servicioOp_repository.save(operacionParametroUpdateForm);
 			
-			ServicioOperacion operacionParametroCreateForm = new ServicioOperacion("Parametro_createForm", "Operacion Parametro Formulario Crear", "/?form");
+			Operacion operacionParametroCreateForm = new Operacion("Parametro_createForm", "Operacion Parametro Formulario Crear", "/?form");
 			operacionParametroCreateForm.setServicio(servicioParametro);
 			servicioOp_repository.save(operacionParametroCreateForm);
 			
-			ServicioOperacion operacionParametroUpdate = new ServicioOperacion("Parametro_update", "Operacion Parametro Actualizar", "/");
+			Operacion operacionParametroUpdate = new Operacion("Parametro_update", "Operacion Parametro Actualizar", "/");
 			operacionParametroUpdate.setServicio(servicioParametro);
 			servicioOp_repository.save(operacionParametroUpdate);
 			
-			ServicioOperacion operacionParametroCreate = new ServicioOperacion("Parametro_create", "Operacion Parametro Crear", "/?form");
+			Operacion operacionParametroCreate = new Operacion("Parametro_create", "Operacion Parametro Crear", "/?form");
 			operacionParametroCreate.setServicio(servicioParametro);
 			servicioOp_repository.save(operacionParametroCreate);
 			
-			ServicioOperacion operacionModuloList = new ServicioOperacion("Modulo_list", "Operacion Modulo Listar", "/");
+			Operacion operacionModuloList = new Operacion("Modulo_list", "Operacion Modulo Listar", "/");
 			operacionModuloList.setServicio(servicioModulo);
 			servicioOp_repository.save(operacionModuloList);
 			
@@ -126,20 +126,22 @@ public class Datos {
 			moduloAdmin.setPortal(portalConfiguracion);
 			modulo_repository.save(moduloAdmin);
 
-			MenuOpcion menuAdmin = new MenuOpcion("MenuAdministracion", "Administracion", "");
+			MenuOpcion menuAdmin = new MenuOpcion("MenuAdministracion", "Administracion", 1);
 			menuAdmin.setModulo(moduloAdmin);
 			menuOpcion_repository.save(menuAdmin);
 			
-			MenuOpcion opcion01 = new MenuOpcion("Portal", "Portales", "/portal");
+			MenuOpcion opcion01 = new MenuOpcion("Portal", "Portales", 2);
 			opcion01.setOpcionPadre(menuAdmin);
+			opcion01.setOperacion(operacionPortalList);
 			
-			MenuOpcion opcion02 = new MenuOpcion("Parametro", "Parametros", "/parametro");
+			MenuOpcion opcion02 = new MenuOpcion("Parametro", "Parametros", 3);
 			opcion02.setOpcionPadre(menuAdmin);
+			opcion02.setOperacion(operacionParametroList);
 			
-			MenuOpcion opcion03 = new MenuOpcion("Modulo", "Modulos", "/modulo");
+			MenuOpcion opcion03 = new MenuOpcion("Modulo", "Modulos", 4);
 			opcion03.setOpcionPadre(menuAdmin);
 			
-			MenuOpcion opcion05 = new MenuOpcion("Servicio", "Servicios", "/servicio");
+			MenuOpcion opcion05 = new MenuOpcion("Servicio", "Servicios", 5);
 			opcion05.setOpcionPadre(menuAdmin);
 			
 			menuOpcion_repository.save(opcion01);
@@ -147,18 +149,18 @@ public class Datos {
 			menuOpcion_repository.save(opcion03);
 			menuOpcion_repository.save(opcion05);
 
-			Portal portalPrueba01 = portal_repository.save(new Portal("Portal Prueba 01", "Portal Prueba 01", "/portal01", "http://localhost\\:8080/siam_rest/"));
-			Portal portalPrueba02 = portal_repository.save(new Portal("Portal Prueba 02", "Portal Prueba 02", "/portal02", "http://localhost\\:8080/cfdi_rest/"));
+			Portal portalPrueba01 = portal_repository.save(new Portal("Portal Prueba 01", "Portal Prueba 01", "/portal01"));
+			Portal portalPrueba02 = portal_repository.save(new Portal("Portal Prueba 02", "Portal Prueba 02", "/portal02"));
 
 			moduloAdmin = new Modulo("Catalogos", "Catalogos Generales", "/catalogos");
 			moduloAdmin.setPortal(portalPrueba01);
 			modulo_repository.save(moduloAdmin);
 
-			menuAdmin = new MenuOpcion("MenuCatalogosGenerales", "Generales", "");
+			menuAdmin = new MenuOpcion("MenuCatalogosGenerales", "Generales", 1);
 			menuAdmin.setModulo(moduloAdmin);
 			menuOpcion_repository.save(menuAdmin);
 
-			opcion01 = new MenuOpcion("TipoPieza", "Tipo Pieza", "/tipo_pieza");
+			opcion01 = new MenuOpcion("TipoPieza", "Tipo Pieza", 2);
 			opcion01.setOpcionPadre(menuAdmin);
 			menuOpcion_repository.save(opcion01);
 		}

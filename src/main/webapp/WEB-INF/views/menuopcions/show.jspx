@@ -5,8 +5,9 @@
     <page:show id="ps_mx_japs_portal_configuracion_modelo_MenuOpcion" object="${menuopcion}" path="/menuopcions" z="n1K2tRiG5gLcv05XTMUo3NAW56U=">
         <field:display field="nombre" id="s_mx_japs_portal_configuracion_modelo_MenuOpcion_nombre" object="${menuopcion}" z="Cvx7GCq6Xb9w92bXyq0phl8K16w="/>
         <field:display field="texto" id="s_mx_japs_portal_configuracion_modelo_MenuOpcion_texto" object="${menuopcion}" z="MIxE/xy5dbOR3TprUwnGRCRE5s0="/>
-        <field:display field="url" id="s_mx_japs_portal_configuracion_modelo_MenuOpcion_url" object="${menuopcion}" z="qdg0I+uQPoMJVVitRX4MsM+xwYs="/>
+        <field:display field="orden" id="s_mx_japs_portal_configuracion_modelo_MenuOpcion_orden" object="${menuopcion}" z="ISw4K/XRn/+y+zwInjax81CGJuk="/>
         <field:display field="modulo" id="s_mx_japs_portal_configuracion_modelo_MenuOpcion_modulo" object="${menuopcion}" z="S2uAehPprTk9BvtCimtQE5LPcuY="/>
         <field:display field="opcionPadre" id="s_mx_japs_portal_configuracion_modelo_MenuOpcion_opcionPadre" object="${menuopcion}" z="g6+b622OJfvfpu9QYQcUyXXbrL4="/>
+        <field:display field="operacion" id="s_mx_japs_portal_configuracion_modelo_MenuOpcion_operacion" object="${menuopcion}" z="v2oxpKA2Rln7f00SjiBELbDTUjo="/>
     </page:show>
 </div>

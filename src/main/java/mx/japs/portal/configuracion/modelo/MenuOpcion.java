@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import org.springframework.roo.addon.json.RooJson;
 
 @RooJavaBean
@@ -29,13 +30,19 @@ public class MenuOpcion {
 
     /**
      */
-    private String url;
+    private Integer orden;
 
-    public MenuOpcion(String nombre, String texto, String url) {
+    public MenuOpcion(String nombre, String texto) {
         super();
         this.nombre = nombre;
         this.texto = texto;
-        this.url = url;
+    }
+
+    public MenuOpcion(String nombre, String texto, Integer orden) {
+        super();
+        this.nombre = nombre;
+        this.texto = texto;
+        this.orden = orden;
     }
 
     /**
@@ -52,4 +59,9 @@ public class MenuOpcion {
      */
     @ManyToOne
     private MenuOpcion opcionPadre;
+
+    /**
+     */
+    @OneToOne
+    private Operacion operacion;
 }

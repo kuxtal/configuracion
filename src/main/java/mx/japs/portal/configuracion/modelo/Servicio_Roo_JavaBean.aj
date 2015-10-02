@@ -4,9 +4,9 @@
 package mx.japs.portal.configuracion.modelo;
 
 import java.util.Set;
+import mx.japs.portal.configuracion.modelo.Operacion;
 import mx.japs.portal.configuracion.modelo.Portal;
 import mx.japs.portal.configuracion.modelo.Servicio;
-import mx.japs.portal.configuracion.modelo.ServicioOperacion;
 
 privileged aspect Servicio_Roo_JavaBean {
     
@@ -34,11 +34,11 @@ privileged aspect Servicio_Roo_JavaBean {
         this.url = url;
     }
     
-    public Set<ServicioOperacion> Servicio.getOperaciones() {
+    public Set<Operacion> Servicio.getOperaciones() {
         return this.operaciones;
     }
     
-    public void Servicio.setOperaciones(Set<ServicioOperacion> operaciones) {
+    public void Servicio.setOperaciones(Set<Operacion> operaciones) {
         this.operaciones = operaciones;
     }
     

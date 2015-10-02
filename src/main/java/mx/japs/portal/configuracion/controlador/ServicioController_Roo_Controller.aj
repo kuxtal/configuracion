@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.ServicioController;
 import mx.japs.portal.configuracion.modelo.Servicio;
+import mx.japs.portal.configuracion.repositorio.OperacionRepository;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
-import mx.japs.portal.configuracion.repositorio.ServicioOperacionRepository;
 import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -27,10 +27,10 @@ privileged aspect ServicioController_Roo_Controller {
     ServicioRepository ServicioController.servicioRepository;
     
     @Autowired
-    PortalRepository ServicioController.portalRepository;
+    OperacionRepository ServicioController.operacionRepository;
     
     @Autowired
-    ServicioOperacionRepository ServicioController.servicioOperacionRepository;
+    PortalRepository ServicioController.portalRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String ServicioController.create(@Valid Servicio servicio, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -99,8 +99,8 @@ privileged aspect ServicioController_Roo_Controller {
     
     void ServicioController.populateEditForm(Model uiModel, Servicio servicio) {
         uiModel.addAttribute("servicio", servicio);
+        uiModel.addAttribute("operacions", operacionRepository.findAll());
         uiModel.addAttribute("portals", portalRepository.findAll());
-        uiModel.addAttribute("serviciooperacions", servicioOperacionRepository.findAll());
     }
     
     String ServicioController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

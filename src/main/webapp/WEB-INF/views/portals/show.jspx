@@ -6,6 +6,5 @@
         <field:display field="nombre" id="s_mx_japs_portal_configuracion_modelo_Portal_nombre" object="${portal}" z="+f5NDvKYS2Kbt0iEraS6zE3f00k="/>
         <field:display field="descripcion" id="s_mx_japs_portal_configuracion_modelo_Portal_descripcion" object="${portal}" z="axB6WTxyRi3HdQEDKakGoBEqjA4="/>
         <field:display field="url" id="s_mx_japs_portal_configuracion_modelo_Portal_url" object="${portal}" z="Y9L562hFINyeAno+s9oBC0qpVSA="/>
-        <field:display field="api_url" id="s_mx_japs_portal_configuracion_modelo_Portal_api_url" object="${portal}" z="fQCgVAvPWaIFZ9seC/YTkL7xQOA="/>
     </page:show>
 </div>

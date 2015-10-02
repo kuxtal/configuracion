@@ -47,7 +47,7 @@ public class Servicio {
     /**
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "servicio")
-    private Set<ServicioOperacion> operaciones = new HashSet<ServicioOperacion>();
+    private Set<Operacion> operaciones = new HashSet<Operacion>();
 
     /**
      */

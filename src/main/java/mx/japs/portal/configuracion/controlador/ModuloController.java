@@ -1,4 +1,5 @@
 package mx.japs.portal.configuracion.controlador;
+
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.Modulo;
 import mx.japs.portal.configuracion.modelo.Portal;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import flexjson.JSONSerializer;
 
@@ -25,16 +27,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.json.RooWebJson;
 
-@RequestMapping("/moduloes")
+@RequestMapping("/modulos")
 @Controller
 @RooWebScaffold(path = "moduloes", formBackingObject = Modulo.class)
 @RooWebJson(jsonObject = Modulo.class)
 public class ModuloController {
-protected final Logger logger = LoggerFactory.getLogger(getClass());
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@RequestMapping(headers = "Accept=application/json", value = "/menuJson", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}/menu", method = RequestMethod.GET, headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> menuJson(@RequestParam(value = "idPortal", required = true) Long idPortal, @RequestParam Map<String,String> jsonParams) {
+	public ResponseEntity<String> menuJson(@PathVariable("id") Long idPortal, @RequestParam Map<String,String> jsonParams) {
 		logger.debug("jsonParams : {}", jsonParams);
 		logger.debug("idPortal : {}", idPortal);
 		
@@ -68,7 +70,13 @@ protected final Logger logger = LoggerFactory.getLogger(getClass());
 	    			for(MenuOpcion opcionHijo : opcion.getOpciones()){
 	    				hashSubMenu = new HashMap();
 	    				hashSubMenu.put("texto", opcionHijo.getTexto());
-	    				hashSubMenu.put("url", opcionHijo.getUrl());
+	    				if(null != opcionHijo.getOperacion()){
+	    					String url = opcionHijo.getOperacion().getServicio().getUrl() + opcionHijo.getOperacion().getUrl();
+		    				hashSubMenu.put("url", url);
+		    			}
+		    			else{
+	    					hashSubMenu.put("url", "###");
+	    				}
 	    				logger.debug("hashSubMenu : {}", hashSubMenu);
 	    				
 	    				listaSubMenu.add(hashSubMenu);
@@ -76,7 +84,10 @@ protected final Logger logger = LoggerFactory.getLogger(getClass());
 	    			}
 	    			hashMenu = new HashMap(); 
 	    			hashMenu.put("texto", opcion.getTexto());
-	    			hashMenu.put("url", opcion.getUrl());
+	    			if(null != opcion.getOperacion())
+	    				hashMenu.put("url", opcion.getOperacion().getUrl());
+	    			else
+	    				hashMenu.put("url", "#");
 	    			hashMenu.put("subMenu", listaSubMenu);
 	    			logger.debug("hashMenu : {}", hashMenu);
 	    			

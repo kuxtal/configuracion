@@ -6,7 +6,7 @@
         <table:table data="${menuopcions}" id="l_mx_japs_portal_configuracion_modelo_MenuOpcion" path="/menuopcions" z="iOTfMW3muJOMMqZMclVGWCHn1IU=">
             <table:column id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_nombre" property="nombre" z="Umi57ATumJsB32XNfsZlL85bY5w="/>
             <table:column id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_texto" property="texto" z="12vUAyQQwSOFL5kIPDhaE+9jWd0="/>
-            <table:column id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_url" property="url" z="w2waO800m0W6h20tnDEJkEtqH5g="/>
+            <table:column id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_orden" property="orden" z="VAKn/+xS0u9zf85/vaw8d6yO+qM="/>
             <table:column id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_modulo" property="modulo" z="GBLSSebGKEjoANQrYBC2xfL07F4="/>
             <table:column id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_opcionPadre" property="opcionPadre" z="B+PHUSW2JSYpuGBCigKiRJvvc0w="/>
         </table:table>

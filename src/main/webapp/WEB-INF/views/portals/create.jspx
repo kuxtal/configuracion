@@ -6,10 +6,10 @@
         <field:input field="nombre" id="c_mx_japs_portal_configuracion_modelo_Portal_nombre" z="xDNzuycgn4KjOmx+ZRQR9Mwxb5U="/>
         <field:input field="descripcion" id="c_mx_japs_portal_configuracion_modelo_Portal_descripcion" z="ncA2hD4goaWd00p10DREvhyshPI="/>
         <field:input field="url" id="c_mx_japs_portal_configuracion_modelo_Portal_url" z="ezFDnJd9Z6y4ZTK2VAcw0IFfioI="/>
-        <field:input field="api_url" id="c_mx_japs_portal_configuracion_modelo_Portal_api_url" z="CG4SutlFy1HIHMBa1HxqjuIGQ5w="/>
         <field:simple field="parametros" id="c_mx_japs_portal_configuracion_modelo_Portal_parametros" messageCode="entity_reference_not_managed" messageCodeAttribute="Parametro" z="E0u7z2tJnTw9pDSgsYqSaYBqWc4="/>
         <field:simple field="modulos" id="c_mx_japs_portal_configuracion_modelo_Portal_modulos" messageCode="entity_reference_not_managed" messageCodeAttribute="Modulo" z="DAoOA3Dj/6kskyC2jEwtnHeufyw="/>
         <field:simple field="servicios" id="c_mx_japs_portal_configuracion_modelo_Portal_servicios" messageCode="entity_reference_not_managed" messageCodeAttribute="Servicio" z="K/xdw6acU+h0DYlfpyOS5jgIQzc="/>
+        <field:simple field="perfiles" id="c_mx_japs_portal_configuracion_modelo_Portal_perfiles" messageCode="entity_reference_not_managed" messageCodeAttribute="Perfil" z="McsVx6wnvCLs09yuhaUTQSSZiE4="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_mx_japs_portal_configuracion_modelo_Portal" render="${not empty dependencies}" z="WG+tcWZUtYA6xNXHYXAmG7TUMoM="/>
 </div>
