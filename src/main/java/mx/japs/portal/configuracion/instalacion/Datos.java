@@ -65,7 +65,7 @@ public class Datos {
 			param03 = param_repository.save(param03);
 
 			// Servicios
-			Servicio servicioPortal = new Servicio("Portal", "Controlador UI Portal", "/servicios");
+			Servicio servicioPortal = new Servicio("Portal", "Portal", "/portals");
 			servicioPortal.setPortal(portalConfiguracion);
 			servicioPortal = servicio_repository.save(servicioPortal);
 			
@@ -73,7 +73,11 @@ public class Datos {
 			servicioModulo.setPortal(portalConfiguracion);
 			servicioModulo = servicio_repository.save(servicioModulo);
 			
-			Servicio servicioParametro = new Servicio("Parametro", "Controlador UI Parametro", "/parametroes");
+			Servicio servicioParametro = new Servicio("Parametro", "Parametro", "/parametroes");
+			servicioParametro.setPortal(portalConfiguracion);
+			servicioParametro = servicio_repository.save(servicioParametro);
+			
+			Servicio servicioServicio = new Servicio("Servicio", "Servicio", "/servicios");
 			servicioParametro.setPortal(portalConfiguracion);
 			servicioParametro = servicio_repository.save(servicioParametro);
 			
@@ -140,9 +144,11 @@ public class Datos {
 			
 			MenuOpcion opcion03 = new MenuOpcion("Modulo", "Modulos", 4);
 			opcion03.setOpcionPadre(menuAdmin);
+			opcion02.setOperacion(operacionParametroList);
 			
 			MenuOpcion opcion05 = new MenuOpcion("Servicio", "Servicios", 5);
 			opcion05.setOpcionPadre(menuAdmin);
+			opcion02.setOperacion(operacionParametroList);
 			
 			menuOpcion_repository.save(opcion01);
 			menuOpcion_repository.save(opcion02);

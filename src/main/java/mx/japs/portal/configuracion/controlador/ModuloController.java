@@ -27,88 +27,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.json.RooWebJson;
 
-@RequestMapping("/modulos")
+@RequestMapping("/moduloes")
 @Controller
 @RooWebScaffold(path = "moduloes", formBackingObject = Modulo.class)
 @RooWebJson(jsonObject = Modulo.class)
 public class ModuloController {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	
-	@RequestMapping(value = "/{id}/menu", method = RequestMethod.GET, headers = "Accept=application/json")
-	@ResponseBody
-	public ResponseEntity<String> menuJson(@PathVariable("id") Long idPortal, @RequestParam Map<String,String> jsonParams) {
-		logger.debug("jsonParams : {}", jsonParams);
-		logger.debug("idPortal : {}", idPortal);
-		
-		HttpHeaders headers = new HttpHeaders();
-	    headers.add("Content-Type", "application/json; charset=utf-8");
-	    
-	    try {
-	    	Portal portal = portalRepository.findOne(idPortal);
-	    	
-	    	List<Modulo> modulos = new ArrayList(portal.getModulos());
-	    	logger.info("listaModulos.size : {}", modulos.size());
-	    	
-	    	String menu = "";
-	    	
-	    	HashMap hash_menu = new HashMap();
-	    	LinkedList listaModulos = new LinkedList();
-	    	LinkedList listaMenu;
-	    	LinkedList listaSubMenu;
-	    	
-	    	HashMap hashModulo;
-	    	HashMap hashMenu;
-	    	HashMap hashSubMenu;
-	    	
-	    	for(Modulo modulo : modulos){
-	    		logger.info("Modulo {} opciones {}", modulo.getNombre(), modulo.getOpciones().size());
-
-	    		listaMenu = new LinkedList();
-	    		for(MenuOpcion opcion : modulo.getOpciones()){
-
-	    			listaSubMenu = new LinkedList();
-	    			for(MenuOpcion opcionHijo : opcion.getOpciones()){
-	    				hashSubMenu = new HashMap();
-	    				hashSubMenu.put("texto", opcionHijo.getTexto());
-	    				if(null != opcionHijo.getOperacion()){
-	    					String url = opcionHijo.getOperacion().getServicio().getUrl() + opcionHijo.getOperacion().getUrl();
-		    				hashSubMenu.put("url", url);
-		    			}
-		    			else{
-	    					hashSubMenu.put("url", "###");
-	    				}
-	    				logger.debug("hashSubMenu : {}", hashSubMenu);
-	    				
-	    				listaSubMenu.add(hashSubMenu);
-		    			
-	    			}
-	    			hashMenu = new HashMap(); 
-	    			hashMenu.put("texto", opcion.getTexto());
-	    			if(null != opcion.getOperacion())
-	    				hashMenu.put("url", opcion.getOperacion().getUrl());
-	    			else
-	    				hashMenu.put("url", "#");
-	    			hashMenu.put("subMenu", listaSubMenu);
-	    			logger.debug("hashMenu : {}", hashMenu);
-	    			
-	    			listaMenu.add(hashMenu);
-	    		}
-	    		hashModulo = new HashMap();
-	    		hashModulo.put("texto", modulo.getNombre());
-	    		hashModulo.put("url", modulo.getPortal().getUrl().concat(modulo.getUrl()));
-	    		hashModulo.put("menu", listaMenu);
-	    		logger.debug("hashModulo : {}", hashModulo);
-	    		
-	    		listaModulos.add(hashModulo);
-	    	}
-	    	
-	    	logger.info("listaModulos : {}", listaModulos);
-	    	menu = new JSONSerializer().deepSerialize(listaModulos); 
-	    	
-	    	return new ResponseEntity<String>(menu, headers, HttpStatus.OK);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	}
 }
