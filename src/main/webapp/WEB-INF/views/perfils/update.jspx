@@ -6,6 +6,6 @@
         <field:input field="nombre" id="c_mx_japs_portal_configuracion_modelo_Perfil_nombre" z="coTA5KFN0RFebBd69e7IeEjkzMU="/>
         <field:input field="descripcion" id="c_mx_japs_portal_configuracion_modelo_Perfil_descripcion" z="OPGQvyXD5qPqCqw7ijUuH3H40JI="/>
         <field:select field="portal" id="c_mx_japs_portal_configuracion_modelo_Perfil_portal" itemValue="id" items="${portals}" path="/portals" z="7H52clzq4DPfhCVHyVic7Sd+BiA="/>
-        <field:select field="operaciones" id="c_mx_japs_portal_configuracion_modelo_Perfil_operaciones" itemValue="id" items="${operacions}" multiple="true" path="/operacions" z="bnQbC8bppB+jXtZKRCtY6TPeaNk="/>
+        <field:select field="opciones" id="c_mx_japs_portal_configuracion_modelo_Perfil_opciones" itemValue="id" items="${menuopcions}" multiple="true" path="/menuopcions" z="5HTUuS9IVaZJadC69mYBtC8ne0w="/>
     </form:update>
 </div>

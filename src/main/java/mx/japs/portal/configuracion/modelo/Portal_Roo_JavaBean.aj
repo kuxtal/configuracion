@@ -8,7 +8,6 @@ import mx.japs.portal.configuracion.modelo.Modulo;
 import mx.japs.portal.configuracion.modelo.Parametro;
 import mx.japs.portal.configuracion.modelo.Perfil;
 import mx.japs.portal.configuracion.modelo.Portal;
-import mx.japs.portal.configuracion.modelo.Servicio;
 
 privileged aspect Portal_Roo_JavaBean {
     
@@ -50,14 +49,6 @@ privileged aspect Portal_Roo_JavaBean {
     
     public void Portal.setModulos(Set<Modulo> modulos) {
         this.modulos = modulos;
-    }
-    
-    public Set<Servicio> Portal.getServicios() {
-        return this.servicios;
-    }
-    
-    public void Portal.setServicios(Set<Servicio> servicios) {
-        this.servicios = servicios;
     }
     
     public Set<Perfil> Portal.getPerfiles() {

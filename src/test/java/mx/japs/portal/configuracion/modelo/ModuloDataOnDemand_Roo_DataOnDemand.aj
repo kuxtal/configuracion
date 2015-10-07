@@ -51,6 +51,9 @@ privileged aspect ModuloDataOnDemand_Roo_DataOnDemand {
     
     public void ModuloDataOnDemand.setUrl(Modulo obj, int index) {
         String url = "url_" + index;
+        if (url.length() > 100) {
+            url = url.substring(0, 100);
+        }
         obj.setUrl(url);
     }
     

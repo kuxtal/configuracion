@@ -68,13 +68,10 @@ public class PortalController {
 	    			for(MenuOpcion opcionHijo : opcion.getOpciones()){
 	    				hashSubMenu = new HashMap();
 	    				hashSubMenu.put("texto", opcionHijo.getTexto());
-	    				if(null != opcionHijo.getOperacion()){
-	    					String url = portal.getUrl() + modulo.getUrl() + opcionHijo.getOperacion().getServicio().getUrl() + opcionHijo.getOperacion().getUrl();
-		    				hashSubMenu.put("url", url);
-		    			}
-		    			else{
-	    					hashSubMenu.put("url", "###");
-	    				}
+
+    					String url = portal.getUrl() + modulo.getUrl() + opcionHijo.getUrl();
+	    				hashSubMenu.put("url", url);
+
 	    				logger.debug("hashSubMenu : {}", hashSubMenu);
 	    				
 	    				listaSubMenu.add(hashSubMenu);
@@ -82,10 +79,9 @@ public class PortalController {
 	    			}
 	    			hashMenu = new HashMap(); 
 	    			hashMenu.put("texto", opcion.getTexto());
-	    			if(null != opcion.getOperacion())
-	    				hashMenu.put("url", opcion.getOperacion().getUrl());
-	    			else
-	    				hashMenu.put("url", "#");
+
+    				hashMenu.put("url", opcion.getUrl());
+
 	    			hashMenu.put("subMenu", listaSubMenu);
 	    			logger.debug("hashMenu : {}", hashMenu);
 	    			

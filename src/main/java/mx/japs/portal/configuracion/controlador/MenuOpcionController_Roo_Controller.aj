@@ -10,7 +10,7 @@ import mx.japs.portal.configuracion.controlador.MenuOpcionController;
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
 import mx.japs.portal.configuracion.repositorio.ModuloRepository;
-import mx.japs.portal.configuracion.repositorio.OperacionRepository;
+import mx.japs.portal.configuracion.repositorio.PerfilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,7 +30,7 @@ privileged aspect MenuOpcionController_Roo_Controller {
     ModuloRepository MenuOpcionController.moduloRepository;
     
     @Autowired
-    OperacionRepository MenuOpcionController.operacionRepository;
+    PerfilRepository MenuOpcionController.perfilRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String MenuOpcionController.create(@Valid MenuOpcion menuOpcion, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -101,7 +101,7 @@ privileged aspect MenuOpcionController_Roo_Controller {
         uiModel.addAttribute("menuOpcion", menuOpcion);
         uiModel.addAttribute("menuopcions", menuOpcionRepository.findAll());
         uiModel.addAttribute("moduloes", moduloRepository.findAll());
-        uiModel.addAttribute("operacions", operacionRepository.findAll());
+        uiModel.addAttribute("perfils", perfilRepository.findAll());
     }
     
     String MenuOpcionController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

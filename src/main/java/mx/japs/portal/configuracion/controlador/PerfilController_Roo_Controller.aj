@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import mx.japs.portal.configuracion.controlador.PerfilController;
 import mx.japs.portal.configuracion.modelo.Perfil;
-import mx.japs.portal.configuracion.repositorio.OperacionRepository;
+import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
 import mx.japs.portal.configuracion.repositorio.PerfilRepository;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ privileged aspect PerfilController_Roo_Controller {
     PerfilRepository PerfilController.perfilRepository;
     
     @Autowired
-    OperacionRepository PerfilController.operacionRepository;
+    MenuOpcionRepository PerfilController.menuOpcionRepository;
     
     @Autowired
     PortalRepository PerfilController.portalRepository;
@@ -99,7 +99,7 @@ privileged aspect PerfilController_Roo_Controller {
     
     void PerfilController.populateEditForm(Model uiModel, Perfil perfil) {
         uiModel.addAttribute("perfil", perfil);
-        uiModel.addAttribute("operacions", operacionRepository.findAll());
+        uiModel.addAttribute("menuopcions", menuOpcionRepository.findAll());
         uiModel.addAttribute("portals", portalRepository.findAll());
     }
     

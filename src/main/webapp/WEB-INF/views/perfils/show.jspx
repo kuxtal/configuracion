@@ -6,6 +6,6 @@
         <field:display field="nombre" id="s_mx_japs_portal_configuracion_modelo_Perfil_nombre" object="${perfil}" z="5BOki+4OndQu3eJ33AhvS6+neEc="/>
         <field:display field="descripcion" id="s_mx_japs_portal_configuracion_modelo_Perfil_descripcion" object="${perfil}" z="/9pdhZEi/U9ti5mf37TRYYDUEbY="/>
         <field:display field="portal" id="s_mx_japs_portal_configuracion_modelo_Perfil_portal" object="${perfil}" z="1iu3wZKIv9doVkzvRVuvr4db7yg="/>
-        <field:display field="operaciones" id="s_mx_japs_portal_configuracion_modelo_Perfil_operaciones" object="${perfil}" z="IlkSFiC7mZjNKsd6gK3sAV6VnPU="/>
+        <field:display field="opciones" id="s_mx_japs_portal_configuracion_modelo_Perfil_opciones" object="${perfil}" z="jTSsxDy0OYcjpT4oH7XjiIaaEno="/>
     </page:show>
 </div>

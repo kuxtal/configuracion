@@ -41,5 +41,5 @@ public class Perfil {
     /**
      */
     @ManyToMany(cascade = CascadeType.ALL)
-    private Set<Operacion> operaciones = new HashSet<Operacion>();
+    private Set<MenuOpcion> opciones = new HashSet<MenuOpcion>();
 }

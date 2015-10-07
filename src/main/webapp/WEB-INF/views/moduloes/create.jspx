@@ -5,7 +5,7 @@
     <form:create id="fc_mx_japs_portal_configuracion_modelo_Modulo" modelAttribute="modulo" path="/moduloes" render="${empty dependencies}" z="VLNprbkjwheX9jTVhTAbemPqdLg=">
         <field:input field="nombre" id="c_mx_japs_portal_configuracion_modelo_Modulo_nombre" z="ghrIBIlIBQbDlG5WCQnI/WaLx8w="/>
         <field:input field="descripcion" id="c_mx_japs_portal_configuracion_modelo_Modulo_descripcion" z="O2gh/N6wrN3Ki0Wt4Q+llJ0J11s="/>
-        <field:input field="url" id="c_mx_japs_portal_configuracion_modelo_Modulo_url" z="ZY0DB6PDsTycoBExCnEdEsPRUDU="/>
+        <field:textarea field="url" id="c_mx_japs_portal_configuracion_modelo_Modulo_url" z="23z8ItY3T4sayhFh1rO7ENVikxQ="/>
         <field:simple field="opciones" id="c_mx_japs_portal_configuracion_modelo_Modulo_opciones" messageCode="entity_reference_not_managed" messageCodeAttribute="Menu Opcion" z="Iz7PlSggbmYxybi657kBGvreWtY="/>
         <field:select field="portal" id="c_mx_japs_portal_configuracion_modelo_Modulo_portal" itemValue="id" items="${portals}" path="/portals" z="xEh8n8PxxYXjLrGs+z2YDZG5vgI="/>
     </form:create>

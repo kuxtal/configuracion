@@ -4,6 +4,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.entity.RooJpaEntity;
 import org.springframework.roo.addon.serializable.RooSerializable;
 import org.springframework.roo.addon.tostring.RooToString;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -28,7 +29,9 @@ public class Modulo {
     private String descripcion;
 
     /**
+     * Url del Modulo
      */
+    @Size(max = 100)
     private String url;
 
     public Modulo(String nombre, String descripcion) {

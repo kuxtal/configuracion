@@ -4,7 +4,7 @@
 package mx.japs.portal.configuracion.modelo;
 
 import java.util.Set;
-import mx.japs.portal.configuracion.modelo.Operacion;
+import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.Perfil;
 import mx.japs.portal.configuracion.modelo.Portal;
 
@@ -34,12 +34,12 @@ privileged aspect Perfil_Roo_JavaBean {
         this.portal = portal;
     }
     
-    public Set<Operacion> Perfil.getOperaciones() {
-        return this.operaciones;
+    public Set<MenuOpcion> Perfil.getOpciones() {
+        return this.opciones;
     }
     
-    public void Perfil.setOperaciones(Set<Operacion> operaciones) {
-        this.operaciones = operaciones;
+    public void Perfil.setOpciones(Set<MenuOpcion> opciones) {
+        this.opciones = opciones;
     }
     
 }

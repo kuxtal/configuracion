@@ -4,6 +4,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.entity.RooJpaEntity;
 import org.springframework.roo.addon.serializable.RooSerializable;
 import org.springframework.roo.addon.tostring.RooToString;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -19,15 +20,21 @@ import org.springframework.roo.addon.json.RooJson;
 public class Portal {
 
     /**
+     * Nombre del Portal
      */
+    @Size(max = 50)
     private String nombre;
 
     /**
+     * Descripcion del Portal
      */
+    @Size(max = 150)
     private String descripcion;
 
     /**
+     * Url del Portal
      */
+    @Size(max = 100)
     private String url;
 
     public Portal(String nombre, String descripcion) {
@@ -52,11 +59,6 @@ public class Portal {
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portal")
     private Set<Modulo> modulos = new HashSet<Modulo>();
-
-    /**
-     */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "portal")
-    private Set<Servicio> servicios = new HashSet<Servicio>();
 
     /**
      */

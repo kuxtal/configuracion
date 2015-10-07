@@ -37,16 +37,25 @@ privileged aspect PortalDataOnDemand_Roo_DataOnDemand {
     
     public void PortalDataOnDemand.setDescripcion(Portal obj, int index) {
         String descripcion = "descripcion_" + index;
+        if (descripcion.length() > 150) {
+            descripcion = descripcion.substring(0, 150);
+        }
         obj.setDescripcion(descripcion);
     }
     
     public void PortalDataOnDemand.setNombre(Portal obj, int index) {
         String nombre = "nombre_" + index;
+        if (nombre.length() > 50) {
+            nombre = nombre.substring(0, 50);
+        }
         obj.setNombre(nombre);
     }
     
     public void PortalDataOnDemand.setUrl(Portal obj, int index) {
         String url = "url_" + index;
+        if (url.length() > 100) {
+            url = url.substring(0, 100);
+        }
         obj.setUrl(url);
     }
     

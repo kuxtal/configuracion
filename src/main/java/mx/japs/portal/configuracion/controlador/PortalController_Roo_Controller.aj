@@ -12,7 +12,6 @@ import mx.japs.portal.configuracion.repositorio.ModuloRepository;
 import mx.japs.portal.configuracion.repositorio.ParametroRepository;
 import mx.japs.portal.configuracion.repositorio.PerfilRepository;
 import mx.japs.portal.configuracion.repositorio.PortalRepository;
-import mx.japs.portal.configuracion.repositorio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,9 +35,6 @@ privileged aspect PortalController_Roo_Controller {
     
     @Autowired
     PerfilRepository PortalController.perfilRepository;
-    
-    @Autowired
-    ServicioRepository PortalController.servicioRepository;
     
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String PortalController.create(@Valid Portal portal, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -110,7 +106,6 @@ privileged aspect PortalController_Roo_Controller {
         uiModel.addAttribute("moduloes", moduloRepository.findAll());
         uiModel.addAttribute("parametroes", parametroRepository.findAll());
         uiModel.addAttribute("perfils", perfilRepository.findAll());
-        uiModel.addAttribute("servicios", servicioRepository.findAll());
     }
     
     String PortalController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

@@ -6,7 +6,7 @@ package mx.japs.portal.configuracion.modelo;
 import java.util.Set;
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.Modulo;
-import mx.japs.portal.configuracion.modelo.Operacion;
+import mx.japs.portal.configuracion.modelo.Perfil;
 
 privileged aspect MenuOpcion_Roo_JavaBean {
     
@@ -24,6 +24,14 @@ privileged aspect MenuOpcion_Roo_JavaBean {
     
     public void MenuOpcion.setTexto(String texto) {
         this.texto = texto;
+    }
+    
+    public String MenuOpcion.getUrl() {
+        return this.url;
+    }
+    
+    public void MenuOpcion.setUrl(String url) {
+        this.url = url;
     }
     
     public Integer MenuOpcion.getOrden() {
@@ -58,12 +66,12 @@ privileged aspect MenuOpcion_Roo_JavaBean {
         this.opcionPadre = opcionPadre;
     }
     
-    public Operacion MenuOpcion.getOperacion() {
-        return this.operacion;
+    public Set<Perfil> MenuOpcion.getPerfiles() {
+        return this.perfiles;
     }
     
-    public void MenuOpcion.setOperacion(Operacion operacion) {
-        this.operacion = operacion;
+    public void MenuOpcion.setPerfiles(Set<Perfil> perfiles) {
+        this.perfiles = perfiles;
     }
     
 }

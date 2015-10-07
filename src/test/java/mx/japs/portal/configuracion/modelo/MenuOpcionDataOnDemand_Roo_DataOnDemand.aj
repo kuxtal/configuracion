@@ -13,7 +13,6 @@ import javax.validation.ConstraintViolationException;
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.MenuOpcionDataOnDemand;
 import mx.japs.portal.configuracion.modelo.ModuloDataOnDemand;
-import mx.japs.portal.configuracion.modelo.OperacionDataOnDemand;
 import mx.japs.portal.configuracion.repositorio.MenuOpcionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,9 +29,6 @@ privileged aspect MenuOpcionDataOnDemand_Roo_DataOnDemand {
     ModuloDataOnDemand MenuOpcionDataOnDemand.moduloDataOnDemand;
     
     @Autowired
-    OperacionDataOnDemand MenuOpcionDataOnDemand.operacionDataOnDemand;
-    
-    @Autowired
     MenuOpcionRepository MenuOpcionDataOnDemand.menuOpcionRepository;
     
     public MenuOpcion MenuOpcionDataOnDemand.getNewTransientMenuOpcion(int index) {
@@ -41,6 +37,7 @@ privileged aspect MenuOpcionDataOnDemand_Roo_DataOnDemand {
         setOpcionPadre(obj, index);
         setOrden(obj, index);
         setTexto(obj, index);
+        setUrl(obj, index);
         return obj;
     }
     
@@ -62,6 +59,14 @@ privileged aspect MenuOpcionDataOnDemand_Roo_DataOnDemand {
     public void MenuOpcionDataOnDemand.setTexto(MenuOpcion obj, int index) {
         String texto = "texto_" + index;
         obj.setTexto(texto);
+    }
+    
+    public void MenuOpcionDataOnDemand.setUrl(MenuOpcion obj, int index) {
+        String url = "url_" + index;
+        if (url.length() > 100) {
+            url = url.substring(0, 100);
+        }
+        obj.setUrl(url);
     }
     
     public MenuOpcion MenuOpcionDataOnDemand.getSpecificMenuOpcion(int index) {

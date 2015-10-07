@@ -5,11 +5,12 @@
     <form:create id="fc_mx_japs_portal_configuracion_modelo_MenuOpcion" modelAttribute="menuOpcion" path="/menuopcions" render="${empty dependencies}" z="MtZNQEkA/ocg5rQzh7FGyEdAriQ=">
         <field:input field="nombre" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_nombre" z="aDigfF2pJIXjA67Q8k9Q7I9kwt8="/>
         <field:input field="texto" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_texto" z="gM/KpRZWySOIpPKbQDRW3KdTX1w="/>
+        <field:textarea field="url" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_url" z="ZTE0VSEegPplmAhwUfn6/cZ9jZU="/>
         <field:input field="orden" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_orden" validationMessageCode="field_invalid_integer" z="e5elROo9XjRgCZsmKJqRkVzJb/E="/>
         <field:simple field="opciones" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_opciones" messageCode="entity_reference_not_managed" messageCodeAttribute="Menu Opcion" z="OWaGBh6W1nFTuhadJdibzEkRC8I="/>
         <field:select field="modulo" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_modulo" itemValue="id" items="${moduloes}" path="/moduloes" z="EE9yg6UwzjMHyXwARdvZbnjWruk="/>
         <field:select field="opcionPadre" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_opcionPadre" itemValue="id" items="${menuopcions}" path="/menuopcions" z="GxhKpHsgTSeLhsdAjAQin+bm66o="/>
-        <field:select field="operacion" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_operacion" itemValue="id" items="${operacions}" path="/operacions" z="HFZY3trYnNpqHdJOGyGbKej37vQ="/>
+        <field:select field="perfiles" id="c_mx_japs_portal_configuracion_modelo_MenuOpcion_perfiles" itemValue="id" items="${perfils}" multiple="true" path="/perfils" z="sCbC1Re5ZBT1KceFVuKkcfaBJ3k="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_mx_japs_portal_configuracion_modelo_MenuOpcion" render="${not empty dependencies}" z="4Cipocp5asRliG0WFuxri/a2qIk="/>
 </div>
