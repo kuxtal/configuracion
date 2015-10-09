@@ -1,6 +1,7 @@
 package mx.japs.portal.configuracion.controlador;
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.Modulo;
+import mx.japs.portal.configuracion.modelo.Parametro;
 import mx.japs.portal.configuracion.modelo.Portal;
 import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
 import org.springframework.stereotype.Controller;
@@ -104,5 +105,31 @@ public class PortalController {
 	        e.printStackTrace();
 	        return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
+	}
+	
+	@RequestMapping(value = "/{id}/parametros", method = RequestMethod.GET, headers = "Accept=application/json")
+	@ResponseBody
+	public ResponseEntity<String> parametrosJson(@PathVariable("id") Long idPortal, @RequestParam Map<String,String> jsonParams) {
+		HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+        try {
+            List<Parametro> result = parametroRepository.findByPortal_Id(idPortal);
+            return new ResponseEntity<String>(Parametro.toJsonArray(result), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
+	
+	@RequestMapping(value = "/{id}/modulos", method = RequestMethod.GET, headers = "Accept=application/json")
+	@ResponseBody
+	public ResponseEntity<String> modulosJson(@PathVariable("id") Long idPortal, @RequestParam Map<String,String> jsonParams) {
+		HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+        try {
+            List<Modulo> result = moduloRepository.findByPortal_Id(idPortal);
+            return new ResponseEntity<String>(Modulo.toJsonArray(result), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 	}
 }

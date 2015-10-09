@@ -83,10 +83,14 @@ public class Datos {
 			MenuOpcion opcion05 = new MenuOpcion("Perfil", "Perfiles", "/perfil",  5);
 			opcion05.setOpcionPadre(menuAdmin);
 			
+			MenuOpcion opcion06 = new MenuOpcion("Menu", "Menu", "/menu",  5);
+			opcion06.setOpcionPadre(menuAdmin);
+			
 			menuOpcion_repository.save(opcion01);
 			menuOpcion_repository.save(opcion02);
 			menuOpcion_repository.save(opcion03);
 			menuOpcion_repository.save(opcion05);
+			menuOpcion_repository.save(opcion06);
 
 			Portal portalPrueba01 = portal_repository.save(new Portal("Portal Prueba 01", "Portal Prueba 01", "/portal01"));
 			Portal portalPrueba02 = portal_repository.save(new Portal("Portal Prueba 02", "Portal Prueba 02", "/portal02"));
