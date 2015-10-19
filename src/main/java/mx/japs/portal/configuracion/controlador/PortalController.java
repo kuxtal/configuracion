@@ -2,6 +2,7 @@ package mx.japs.portal.configuracion.controlador;
 import mx.japs.portal.configuracion.modelo.MenuOpcion;
 import mx.japs.portal.configuracion.modelo.Modulo;
 import mx.japs.portal.configuracion.modelo.Parametro;
+import mx.japs.portal.configuracion.modelo.Perfil;
 import mx.japs.portal.configuracion.modelo.Portal;
 import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
 import org.springframework.stereotype.Controller;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import flexjson.JSONSerializer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -63,10 +66,17 @@ public class PortalController {
 	    		logger.info("Modulo {} opciones {}", modulo.getNombre(), modulo.getOpciones().size());
 
 	    		listaMenu = new LinkedList();
-	    		for(MenuOpcion opcion : modulo.getOpciones()){
+	    		
+	    		List<MenuOpcion> opciones = new ArrayList(modulo.getOpciones());
+	    		BeanComparator bc = new BeanComparator("orden");
+	    		Collections.sort(opciones, bc);
+	    		for(MenuOpcion opcion : opciones){
 
 	    			listaSubMenu = new LinkedList();
-	    			for(MenuOpcion opcionHijo : opcion.getOpciones()){
+	    			
+	    			List<MenuOpcion> subOpciones = new ArrayList(opcion.getOpciones());
+	    			Collections.sort(subOpciones, bc);
+	    			for(MenuOpcion opcionHijo : subOpciones){
 	    				hashSubMenu = new HashMap();
 	    				hashSubMenu.put("texto", opcionHijo.getTexto());
 
@@ -128,6 +138,19 @@ public class PortalController {
         try {
             List<Modulo> result = moduloRepository.findByPortal_Id(idPortal);
             return new ResponseEntity<String>(Modulo.toJsonArray(result), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
+	
+	@RequestMapping(value = "/{id}/perfiles", method = RequestMethod.GET, headers = "Accept=application/json")
+	@ResponseBody
+	public ResponseEntity<String> perfilesJson(@PathVariable("id") Long idPortal, @RequestParam Map<String,String> jsonParams) {
+		HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+        try {
+            List<Perfil> result = perfilRepository.findByPortal_Id(idPortal);
+            return new ResponseEntity<String>(Perfil.toJsonArray(result), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
