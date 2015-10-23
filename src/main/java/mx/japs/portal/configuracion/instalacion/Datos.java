@@ -110,6 +110,11 @@ public class Datos {
 			Perfil perfilAdmin = new Perfil("Administrador", "Perfil Administrador");
 			perfilAdmin.setPortal(portalConfiguracion);
 			perfil_repository.save(perfilAdmin);
+			
+			perfil_repository.findOne(1L);
+			perfilAdmin.getOpciones().add(opcion05);
+			perfilAdmin.getOpciones().add(opcion02);
+			perfil_repository.save(perfilAdmin);
 		}
 	}
 }
